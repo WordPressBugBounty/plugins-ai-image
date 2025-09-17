@@ -1,0 +1,267 @@
+# Copyright (C) 2025 ai-image
+# This file is distributed under the GPLv3 license.
+msgid ""
+msgstr ""
+"Project-Id-Version: ai-image 1.5.9\n"
+"Report-Msgid-Bugs-To: BdThemes <EMAIL>\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"POT-Creation-Date: 2025-05-12T04:48:39.222Z\n"
+"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
+"Last-Translator: BdThemes <EMAIL>\n"
+"Language-Team: BdThemes <EMAIL>\n"
+"X-Generator: @wp-blocks/make-pot 1.4.0\n"
+"Language: en\n"
+"domain: X-Domain: ai-image\n"
+
+#: ai-image.php
+#. Name of the plugin
+msgid "Instant Image Generator"
+msgstr ""
+
+#: ai-image.php
+#. Author URI of the plugin
+msgid "https://bdthemes.com"
+msgstr ""
+
+#: ai-image.php
+#. Description of the plugin
+msgid ""
+"One-Click Image Uploads from Pixabay, Pexels and OpenAI. Easily upload "
+"images directly to your website without leaving WordPress."
+msgstr ""
+
+#: ai-image.php
+#. Author of the plugin
+msgid "BdThemes"
+msgstr ""
+
+#: plugin.php:220
+msgid "Image Generator ??"
+msgstr ""
+
+#: admin/settings.php:10
+#: admin/settings.php:15
+msgid "AI Image"
+msgstr ""
+
+#: admin/settings.php:29
+msgid "API Key"
+msgstr ""
+
+#: admin/settings.php:37
+msgid "Please enter your Openai API key. You can get your API key from %s ."
+msgstr ""
+
+#: admin/settings.php:44
+msgid "Learn more about %s"
+msgstr ""
+
+#: admin/settings.php:68
+msgid "Go to Image Generator"
+msgstr ""
+
+#: admin/settings.php:68
+msgid "Image Generator"
+msgstr ""
+
+#: admin/api.php:27
+msgid "Nonce verification failed"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:166
+msgid "Settings"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:172
+msgid "Campaign Name"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:184
+msgid "Status"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:188
+msgid "Active"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:192
+msgid "Paused"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:212
+msgid "Enable Wheel Popup"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:230
+msgid "Development Mode ?"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:237
+msgid "Which devices will this popup appear?"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:248
+msgid "Desktop"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:260
+msgid "Tablet"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:272
+msgid "Mobile"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:279
+msgid "Spam Protection"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:290
+msgid "Email Coupon"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:294
+msgid "Send coupon code to the subscriber's email after submitting the form."
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:309
+msgid "Enable Invisible reCAPTCHA (Coming Soon)"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:322
+msgid "Enable Double Options (Coming Soon)"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:331
+msgid "WooCommerce"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:342
+msgid "Enable WooCommerce?"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:346
+msgid ""
+"Enable this option to show the auto coupon sync within the Coupon Setting "
+"Tab."
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:359
+msgid "Display rules"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:363
+msgid "When to show the popup / campaign ?"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:378
+msgid "On Page Load"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:379
+msgid "On Exit"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:380
+msgid "On Scroll"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:381
+msgid "On Inactivity"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:383
+msgid "On Click"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:386
+#: src/admin/components/includes/Settings.jsx:394
+msgid " (Pro)"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:391
+msgid "Referrer"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:407
+msgid "Show on scroll percentage"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:437
+msgid "Inactivity Time"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:451
+#: src/admin/components/includes/Settings.jsx:483
+msgid "Seconds"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:461
+msgid "Show popup after visitor spends"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:464
+msgid ""
+"How much time does the visitor have to spend on a page before the popup "
+"appears."
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:491
+msgid "Selector"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:504
+msgid "Contains"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:516
+msgid "When the popup should re-appear to the same visitor ?"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:522
+msgid ""
+"( When a visitor has seen this popup, how long we should wait before "
+"showing the popup for the same visitor. )"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:542
+#: src/admin/components/includes/Settings.jsx:574
+msgid "Days"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:585
+msgid "Weeks"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:595
+msgid "When the Popup will be show / hide ?"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:598
+msgid ""
+"( When a visitor has submitted the form in this popup, how long we should "
+"wait before showing the popup for the same subscriber. )"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:604
+msgid "Loading..."
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:610
+msgid "Start Date"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:632
+msgid "End Date"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:655
+msgid "Your Time"
+msgstr ""
+
+#: src/admin/components/includes/Settings.jsx:668
+msgid "Save Settings"
+msgstr ""
