@@ -1,10 +1,10 @@
 === Instant Image Generator (One Click Image Uploads from Pixabay, Pexels and OpenAI) ===
 Contributors: bdthemes, selimrana, abutalib, mohammaadfarid
 Tags: ai, image generator, openai, image, ai image
-Stable tag: 1.5.9
+Stable tag: 1.5.11
 Requires PHP: 7.0.0
 Requires at least: 5.0.0
-Tested up to: 6.8.1
+Tested up to: 6.9
 License: GPL3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,7 +61,15 @@ https://youtu.be/cGmPFU_ju4s
 
 == Changelog ==
 
-= 1.5.9 [12th May 2025] =
+= 1.5.11 [1st December 2025] =
+
+* Updated: Made compatible with WordPress version 6.9
+
+= 1.5.10 [17th November 2025] =
+
+* Updated: Made Compatible with WordPress 6.8.3
+
+= 1.5.9 [11th May 2025] =
 
 * Updated: System improved
 

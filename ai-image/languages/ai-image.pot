@@ -1,20 +1,20 @@
-# Copyright (C) 2025 ai-image
+# Copyright (C) 2025 Instant Image Generator
 # This file is distributed under the GPLv3 license.
 msgid ""
 msgstr ""
-"Project-Id-Version: ai-image 1.5.9\n"
-"Report-Msgid-Bugs-To: BdThemes <EMAIL>\n"
+"Project-Id-Version: Instant Image Generator 1.5.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugins/ai-image\n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"POT-Creation-Date: 2025-05-12T04:48:39.222Z\n"
+"POT-Creation-Date: 2025-11-17T09:16:49.915Z\n"
 "PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
-"Last-Translator: BdThemes <EMAIL>\n"
-"Language-Team: BdThemes <EMAIL>\n"
-"X-Generator: @wp-blocks/make-pot 1.4.0\n"
+"Last-Translator: BdThemes <info@bdthemes.com>\n"
+"Language-Team: BdThemes <info@bdthemes.com>\n"
+"X-Generator: @wp-blocks/make-pot 1.6.3\n"
 "Language: en\n"
-"domain: X-Domain: ai-image\n"
+"X-Domain: ai-image\n"
 
 #: ai-image.php
 #. Name of the plugin
