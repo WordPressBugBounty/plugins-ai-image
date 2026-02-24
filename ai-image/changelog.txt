@@ -1,0 +1,136 @@
+## 2.0.0 [25th February 2026]
+
+### Added
+
+- Complete plugin rebuild with React and Tailwind CSS for modern UI/UX
+- Global Search — search across all image providers simultaneously
+- Unsplash image source support
+- Openverse image source support (WordPress, Flickr, NASA, SpaceX, Wikimedia, and more)
+- Giphy GIF source with animation control (hover to play)
+- Google Gemini Imagen 3.0 AI image generation
+- WordPress Media Modal integration ("Instant Images" tab)
+- Advanced provider-specific filters (Source, Orientation, Order, Type, Category, Color)
+- Batch selection and import for multiple images
+- Favorites and bookmarking system
+- Search history with keyboard navigation
+- Full-size image preview modal with sidebar and next/prev navigation
+- Smart image metadata on import (Alt Text, Title, Caption with attribution)
+- Individual toggle controls for Alt Text, Title, and Attribution metadata
+- Drag-and-drop provider ordering in dashboard
+- Global Search on/off toggle
+- Display Settings tab (View Mode, Items Per Page, Thumbnail Size, Load More Mode)
+- Custom Image Sizes management (add/delete custom WordPress image sizes)
+- Professional admin dashboard with sidebar navigation
+- Grid and List view toggle
+- Infinite scroll with manual "Load More" button fallback
+- Loading skeleton animations
+- Responsive design for all screen sizes
+- Generate Image from content in page/post
+
+### Improved
+
+- Image import now uses original source title for filename
+- Media library auto-refreshes after import in media modal
+- Provider tabs respect enabled/disabled state and custom ordering
+
+
+## 1.5.11 [1st December 2025]
+
+### Updated
+
+- Made compatible with WordPress version 6.9
+
+
+##  1.5.10 [17th November 2025]
+
+### Updated
+
+- Made Compatible with WordPress 6.8.3
+
+
+## 1.5.9 [11th May 2025]
+
+### Updated
+
+- System improved
+
+
+## 1.5.8 [5th May 2025]
+
+### Fixed
+
+- OpenAI avatar issue fixed
+
+### Updated
+
+- Modal design improved
+
+
+##  1.5.7 [22th April 2025]
+
+### Added
+
+- Made Compatible with WordPress Version 6.8
+- Plugin page action menu settings added
+
+### Fixed
+
+- Pexels avatar issue fixed
+
+### Updated
+
+- System improved
+
+### Improved
+
+- Pexels image preview and upload by default original size
+
+
+## 1.5.5 [24th November 2024]
+
+### Added
+
+- Image URL copy Button Added
+
+### Improved
+
+- Grid Layout Improved
+- Open AI Improved
+
+
+## 1.5.4 [13th November 2024]
+
+### Added
+
+- New system added
+
+
+## 1.5.2 [9th November 2024]
+
+### Fixed
+
+- Security issue fixed
+
+
+## 1.5.1 [20th August 2024]
+
+### Updated
+
+- System improved
+
+
+## 1.5.0 [3rd July 2024]
+
+### Added
+
+- Pexels Support added
+- Pixabay Support added
+
+### Updated
+
+- System improved
+
+
+## 1.0.0
+
+- Initial Release
