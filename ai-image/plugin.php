@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
+// Load plugin constants
+require_once plugin_dir_path( __FILE__ ) . 'admin/constants.php';
+
 /**
  * The main plugin class
  */
@@ -86,7 +89,7 @@ final class Plugin {
 
 		$provider_ids = array( 'global', 'pexels', 'pixabay', 'openverse', 'unsplash',  'giphy', 'openai', 'gemini' );
 		$provider_enabled = array();
-		$enabled_by_default = array( 'global', 'pexels', 'pixabay', 'openverse' );
+		$enabled_by_default = array( 'global', 'pexels', 'pixabay', 'openverse', 'unsplash', 'giphy' );
 		foreach ( $provider_ids as $id ) {
 			$default_value = in_array( $id, $enabled_by_default, true ) ? '1' : '0';
 			$val = get_option( 'bdthemes_ai_image_provider_' . $id, $default_value );
@@ -125,8 +128,8 @@ final class Plugin {
 			'version'          => BDT_AI_IMAGE_VERSION,
 			'settings_url'     => admin_url( 'options-general.php?page=ai-image-settings' ),
 			'generator_url'    => admin_url( 'upload.php?page=bdt-ai-media-tab' ),
-			'support_url'      => 'https://bdthemes.com/support/',
-			'docs_url'         => 'https://bdthemes.com/all-knowledge-base-of-instant-image-generator/?utm_source=WordPress_Repository&utm_medium=Plugin_Page&utm_campaign=WordPress_to_AI_Image_Generator',
+			'support_url'      => 'https://bdthemes.com/support/?utm_source=WordPress_Repository&utm_medium=Plugin_Page&utm_campaign=WordPress_to_Instant_Image_Generator',
+			'docs_url'         => 'https://bdthemes.com/all-knowledge-base-of-instant-image-generator/?utm_source=WordPress_Repository&utm_medium=Plugin_Page&utm_campaign=WordPress_to_Instant_Image_Generator',
 			'provider_enabled' => $provider_enabled,
 			'provider_order'   => $provider_order,
 			'general_settings' => $general,
@@ -147,7 +150,7 @@ final class Plugin {
 	}
 
 	/**
-	 * Enqueue block editor assets for the AI Image Generator button
+	 * Enqueue block editor assets for the Image Generator button
 	 *
 	 * @since 2.0.0
 	 */
@@ -182,7 +185,7 @@ final class Plugin {
 		$provider_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
 		$has_enabled_provider = false;
 		$enabled_providers = array();
-		$enabled_by_default = array( 'pexels', 'pixabay', 'openverse' );
+		$enabled_by_default = array( 'pexels', 'pixabay', 'openverse', 'unsplash', 'giphy' );
 		
 		foreach ( $provider_ids as $id ) {
 			$default_value = in_array( $id, $enabled_by_default, true ) ? '1' : '0';
@@ -216,7 +219,7 @@ final class Plugin {
 	}
 
 	/**
-	 * Enqueue the inline script that adds the "AI Image Generator" tab to the new wp.media modal.
+	 * Enqueue the inline script that adds the "Image Generator" tab to the new wp.media modal.
 	 */
 	private function enqueue_media_modal_script() {
 		$inline_js = <<<'MEDIAJS'
@@ -224,7 +227,7 @@ final class Plugin {
 	if ( typeof wp === 'undefined' || ! wp.media || ! wp.media.view ) return;
 
 	var TAB_ID   = 'ai-image-tab';
-	var TAB_TEXT = 'AI Image Generator';
+	var TAB_TEXT = 'Image Generator';
 
 	/**
 	 * Custom Backbone view that renders our React app.
@@ -300,8 +303,8 @@ MEDIAJS;
 	public function add_settings_menu() {
 		add_submenu_page(
 			'options-general.php',
-			__( 'AI Image Generator', 'ai-image' ),
-			__( 'AI Image Generator', 'ai-image' ),
+			__( 'Image Generator', 'ai-image' ),
+			__( 'Image Generator', 'ai-image' ),
 			'manage_options',
 			'ai-image-settings',
 			array( $this, 'render_settings_page' )
@@ -521,7 +524,7 @@ MEDIAJS;
 	 * Media Sub Menu
 	 */
 	public function media_sub_menu() {
-		add_media_page( 'AI Image Generator', 'AI Image Generator', 'read', 'bdt-ai-media-tab', function () {
+		add_media_page( 'Image Generator', 'Image Generator', 'read', 'bdt-ai-media-tab', function () {
 			?>
 			<div class="wrap ai-image-wrap">
 				<div id="ai-image-generator"></div>
@@ -537,7 +540,7 @@ MEDIAJS;
 		if ( get_option( 'bdthemes_ai_image_hide_media_modal_tab', '0' ) === '1' ) {
 			return $tabs;
 		}
-		$tabs['ai_image'] = __( 'AI Image Generator 🪄', 'ai-image' );
+		$tabs['ai_image'] = __( 'Image Generator 🪄', 'ai-image' );
 		return $tabs;
 	}
 
@@ -571,7 +574,9 @@ MEDIAJS;
 		add_action( 'wp_ajax_upload_image_to_wp', array( $this, 'upload_image_to_wp' ) );
 		add_action( 'wp_ajax_ai_image_get_openai_key', array( $this, 'ajax_get_openai_key' ) );
 		add_action( 'wp_ajax_ai_image_get_gemini_key', array( $this, 'ajax_get_gemini_key' ) );
+		add_action( 'wp_ajax_ai_image_get_pexels_key', array( $this, 'ajax_get_pexels_key' ) );
 		add_action( 'wp_ajax_ai_image_get_unsplash_key', array( $this, 'ajax_get_unsplash_key' ) );
+		add_action( 'wp_ajax_ai_image_get_pixabay_key', array( $this, 'ajax_get_pixabay_key' ) );
 		add_action( 'wp_ajax_ai_image_get_giphy_key', array( $this, 'ajax_get_giphy_key' ) );
 		add_action( 'wp_ajax_ai_image_save_settings', array( $this, 'ajax_save_settings' ) );
 		add_action( 'wp_ajax_ai_image_test_api_key', array( $this, 'ajax_test_api_key' ) );
@@ -747,11 +752,31 @@ MEDIAJS;
 	}
 
 	/**
+	 * AJAX: return Pexels API key (JSON).
+	 */
+	public function ajax_get_pexels_key() {
+		$this->api_key_ajax_permission_check();
+		$key = get_option( 'bdthemes_pexels_api_key' );
+		$key = is_string( $key ) ? trim( $key ) : '';
+		wp_send_json_success( array( 'api_key' => $key ? $key : null ) );
+	}
+
+	/**
 	 * AJAX: return Unsplash API key (JSON).
 	 */
 	public function ajax_get_unsplash_key() {
 		$this->api_key_ajax_permission_check();
 		$key = get_option( 'bdthemes_unsplash_access_key' );
+		$key = is_string( $key ) ? trim( $key ) : '';
+		wp_send_json_success( array( 'api_key' => $key ? $key : null ) );
+	}
+
+	/**
+	 * AJAX: return Pixabay API key (JSON).
+	 */
+	public function ajax_get_pixabay_key() {
+		$this->api_key_ajax_permission_check();
+		$key = get_option( 'bdthemes_pixabay_api_key' );
 		$key = is_string( $key ) ? trim( $key ) : '';
 		wp_send_json_success( array( 'api_key' => $key ? $key : null ) );
 	}
@@ -787,6 +812,12 @@ MEDIAJS;
 		}
 		if ( isset( $input['giphy_api_key'] ) ) {
 			update_option( 'bdthemes_giphy_api_key', sanitize_text_field( is_string( $input['giphy_api_key'] ) ? trim( $input['giphy_api_key'] ) : '' ) );
+		}
+		if ( isset( $input['pexels_api_key'] ) ) {
+			update_option( 'bdthemes_pexels_api_key', sanitize_text_field( is_string( $input['pexels_api_key'] ) ? trim( $input['pexels_api_key'] ) : '' ) );
+		}
+		if ( isset( $input['pixabay_api_key'] ) ) {
+			update_option( 'bdthemes_pixabay_api_key', sanitize_text_field( is_string( $input['pixabay_api_key'] ) ? trim( $input['pixabay_api_key'] ) : '' ) );
 		}
 		$provider_ids = array( 'global', 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
 		foreach ( $provider_ids as $id ) {
@@ -867,11 +898,35 @@ MEDIAJS;
 				$api_key = get_option( 'bdthemes_openai_api_key' );
 			} elseif ( 'unsplash' === $provider ) {
 				$api_key = get_option( 'bdthemes_unsplash_access_key' );
+				// For Unsplash, if no custom key is saved, use default key for testing
+				if ( empty( trim( $api_key ) ) ) {
+					$api_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_UNSPLASH_DEFAULT_KEY );
+				}
+			} elseif ( 'pexels' === $provider ) {
+				$api_key = get_option( 'bdthemes_pexels_api_key' );
+				// For Pexels, if no custom key is saved, use default key for testing
+				if ( empty( trim( $api_key ) ) ) {
+					$api_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_PEXELS_DEFAULT_KEY );
+				}
+			} elseif ( 'pixabay' === $provider ) {
+				$api_key = get_option( 'bdthemes_pixabay_api_key' );
+				// For Pixabay, if no custom key is saved, use default key for testing
+				if ( empty( trim( $api_key ) ) ) {
+					$api_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_PIXABAY_DEFAULT_KEY );
+				}
 			} elseif ( 'giphy' === $provider ) {
 				$api_key = get_option( 'bdthemes_giphy_api_key' );
+				// For Giphy, if no custom key is saved, use default key for testing
+				if ( empty( trim( $api_key ) ) ) {
+					$api_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_GIPHY_DEFAULT_KEY );
+				}
+			} elseif ( 'gemini' === $provider ) {
+				$api_key = get_option( 'bdthemes_gemini_api_key' );
 			}
 			$api_key = is_string( $api_key ) ? trim( $api_key ) : '';
 		}
+		// If user provides a key via POST, test that exact key (don't fallback)
+		// The fallback only applies when api_key POST param is completely empty
 		if ( empty( $api_key ) ) {
 			wp_send_json_error( array( 'message' => __( 'No API key provided.', 'ai-image' ) ) );
 		}
@@ -957,6 +1012,87 @@ MEDIAJS;
 			$body = json_decode( wp_remote_retrieve_body( $response ), true );
 			$msg  = isset( $body['error']['message'] ) ? $body['error']['message'] : __( 'Gemini key invalid.', 'ai-image' );
 			return new \WP_Error( 'gemini_test_failed', $msg );
+		}
+		if ( 'pexels' === $provider ) {
+			function generateRandomWords($count = 5) {
+				$letters = 'abcdefghijklmnopqrstuvwxyz';
+
+				function createWord($letters) {
+					$length = wp_rand(4, 8); // word length between 4–8 characters
+					$word = '';
+
+					for ($i = 0; $i < $length; $i++) {
+						$word .= $letters[wp_rand(0, strlen($letters) - 1)];
+					}
+
+					return $word;
+				}
+
+				$words = [];
+
+				for ($i = 0; $i < $count; $i++) {
+					$words[] = createWord($letters);
+				}
+
+				return $words;
+			}
+			$response = wp_remote_get(
+				'https://api.pexels.com/v1/search?query=' . urlencode(implode(' ', generateRandomWords())) . '&per_page=1',
+				array(
+					'headers' => array( 'Authorization' => $api_key ),
+					'timeout' => 15,
+				)
+			);
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+			$code = wp_remote_retrieve_response_code( $response );
+			$body = wp_remote_retrieve_body( $response );
+			
+			// Check for error responses
+			if ( $code === 401 || $code === 403 ) {
+				return new \WP_Error( 'pexels_test_failed', __( 'Pexels API key not valid. Invalid or unauthorized key.', 'ai-image' ) );
+			}
+			
+			if ( $code !== 200 ) {
+				return new \WP_Error( 'pexels_test_failed', __( 'Pexels API key not valid. Please pass a valid API key.', 'ai-image' ) );
+			}
+			
+			// Parse and validate response structure
+			$data = json_decode( $body, true );
+			
+			// Check JSON decode errors
+			if ( json_last_error() !== JSON_ERROR_NONE ) {
+				return new \WP_Error( 'pexels_test_failed', __( 'Pexels API returned invalid JSON.', 'ai-image' ) );
+			}
+			
+			// Check for error field in response
+			if ( isset( $data['error'] ) ) {
+				/* translators: %s: error message from Pexels API */
+				return new \WP_Error( 'pexels_test_failed', sprintf( __( 'Pexels API key not valid: %s', 'ai-image' ), $data['error'] ) );
+			}
+			
+			// Verify response has the expected photos array structure
+			// A valid API key should return a response with a photos array (even if empty)
+			if ( ! isset( $data['photos'] ) || ! is_array( $data['photos'] ) ) {
+				return new \WP_Error( 'pexels_test_failed', __( 'Pexels API key not valid. Unexpected response format.', 'ai-image' ) );
+			}
+			
+			return true;
+		}
+		if ( 'pixabay' === $provider ) {
+			$response = wp_remote_get(
+				'https://pixabay.com/api/?key=' . urlencode( $api_key ) . '&q=nature&per_page=3',
+				array( 'timeout' => 15 )
+			);
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+			$code = wp_remote_retrieve_response_code( $response );
+			if ( $code === 200 ) {
+				return true;
+			}
+			return new \WP_Error( 'pixabay_test_failed', __( 'Pixabay API key not valid. Please pass a valid API key.', 'ai-image' ) );
 		}
 		return new \WP_Error( 'unknown_provider', __( 'Unknown provider.', 'ai-image' ) );
 	}

@@ -20,12 +20,20 @@ class BDTHEMES_OPENAI_ADMIN_SETTINGS_PAGE {
         register_setting('bdthemes-ai-image-options', 'bdthemes_gemini_api_key', ['sanitize_callback' => 'sanitize_text_field']);
 
         add_settings_section('bdthemes_unsplash_section', '<span class="ai-title-settings">Unsplash Settings</span>', [$this, 'unsplash_settings_section'], 'bdthemes-ai-image-options');
-        add_settings_field('bdthemes_unsplash_access_key', __('Unsplash Access Key', 'ai-image'), [$this, 'unsplash_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_unsplash_section');
+        add_settings_field('bdthemes_unsplash_access_key', __('Unsplash Access Key (Optional)', 'ai-image'), [$this, 'unsplash_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_unsplash_section');
         register_setting('bdthemes-ai-image-options', 'bdthemes_unsplash_access_key', ['sanitize_callback' => function( $v ) { return sanitize_text_field( is_string( $v ) ? trim( $v ) : $v ); }]);
 
         add_settings_section('bdthemes_giphy_section', '<span class="ai-title-settings">Giphy Settings</span>', [$this, 'giphy_settings_section'], 'bdthemes-ai-image-options');
-        add_settings_field('bdthemes_giphy_api_key', __('Giphy API Key', 'ai-image'), [$this, 'giphy_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_giphy_section');
+        add_settings_field('bdthemes_giphy_api_key', __('Giphy API Key (Optional)', 'ai-image'), [$this, 'giphy_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_giphy_section');
         register_setting('bdthemes-ai-image-options', 'bdthemes_giphy_api_key', ['sanitize_callback' => function( $v ) { return sanitize_text_field( is_string( $v ) ? trim( $v ) : $v ); }]);
+
+        add_settings_section('bdthemes_pexels_section', '<span class="ai-title-settings">Pexels Settings</span>', [$this, 'pexels_settings_section'], 'bdthemes-ai-image-options');
+        add_settings_field('bdthemes_pexels_api_key', __('Pexels API Key (Optional)', 'ai-image'), [$this, 'pexels_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_pexels_section');
+        register_setting('bdthemes-ai-image-options', 'bdthemes_pexels_api_key', ['sanitize_callback' => function( $v ) { return sanitize_text_field( is_string( $v ) ? trim( $v ) : $v ); }]);
+
+        add_settings_section('bdthemes_pixabay_section', '<span class="ai-title-settings">Pixabay Settings</span>', [$this, 'pixabay_settings_section'], 'bdthemes-ai-image-options');
+        add_settings_field('bdthemes_pixabay_api_key', __('Pixabay API Key (Optional)', 'ai-image'), [$this, 'pixabay_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_pixabay_section');
+        register_setting('bdthemes-ai-image-options', 'bdthemes_pixabay_api_key', ['sanitize_callback' => function( $v ) { return sanitize_text_field( is_string( $v ) ? trim( $v ) : $v ); }]);
 
         $provider_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
         $sanitize_provider = function( $v ) {
@@ -90,33 +98,35 @@ class BDTHEMES_OPENAI_ADMIN_SETTINGS_PAGE {
 
     public function unsplash_settings_section() {
         printf(
-            '<p>%s <a href="https://unsplash.com/developers" target="_blank" rel="noopener">%s</a>.</p>',
-            esc_html__('Get your free Unsplash Access Key (Client ID) from', 'ai-image'),
-            esc_html__('Unsplash Developers', 'ai-image')
+            '<p>%s <strong>%s</strong></p>',
+            esc_html__('Unsplash works with a default API key. You can optionally provide your own Access Key from', 'ai-image'),
+            '<a href="https://unsplash.com/developers" target="_blank" rel="noopener">' . esc_html__('Unsplash Developers', 'ai-image') . '</a>'
         );
     }
 
     public function unsplash_api_key_callback() {
         $api_key = get_option('bdthemes_unsplash_access_key');
         printf(
-            '<input type="text" name="bdthemes_unsplash_access_key" value="%s" class="large-text" placeholder="" />',
-            isset($api_key) ? esc_attr($api_key) : ''
+            '<input type="text" name="bdthemes_unsplash_access_key" value="%s" class="large-text" placeholder="" /><p class="description">%s</p>',
+            isset($api_key) ? esc_attr($api_key) : '',
+            esc_html__('Leave empty to use the default API key.', 'ai-image')
         );
     }
 
     public function giphy_settings_section() {
         printf(
-            '<p>%s <a href="https://developers.giphy.com/" target="_blank" rel="noopener">%s</a>.</p>',
-            esc_html__('Get your free Giphy API key from', 'ai-image'),
-            esc_html__('GIPHY Developers', 'ai-image')
+            '<p>%s <strong>%s</strong></p>',
+            esc_html__('Giphy works with a default API key. You can optionally provide your own API key from', 'ai-image'),
+            '<a href="https://developers.giphy.com/" target="_blank" rel="noopener">' . esc_html__('GIPHY Developers', 'ai-image') . '</a>'
         );
     }
 
     public function giphy_api_key_callback() {
         $api_key = get_option('bdthemes_giphy_api_key');
         printf(
-            '<input type="text" name="bdthemes_giphy_api_key" value="%s" class="large-text" placeholder="" />',
-            isset($api_key) ? esc_attr($api_key) : ''
+            '<input type="text" name="bdthemes_giphy_api_key" value="%s" class="large-text" placeholder="" /><p class="description">%s</p>',
+            isset($api_key) ? esc_attr($api_key) : '',
+            esc_html__('Leave empty to use the default API key.', 'ai-image')
         );
     }
 
@@ -133,6 +143,40 @@ class BDTHEMES_OPENAI_ADMIN_SETTINGS_PAGE {
         printf(
             '<input type="text" name="bdthemes_gemini_api_key" value="%s" class="large-text" placeholder="AIza..." />',
             isset($api_key) ? esc_attr($api_key) : ''
+        );
+    }
+
+    public function pexels_settings_section() {
+        printf(
+            '<p>%s <strong>%s</strong></p>',
+            esc_html__('Pexels works with a default API key. You can optionally provide your own API key from', 'ai-image'),
+            '<a href="https://www.pexels.com/api/" target="_blank" rel="noopener">' . esc_html__('Pexels API', 'ai-image') . '</a>'
+        );
+    }
+
+    public function pexels_api_key_callback() {
+        $api_key = get_option('bdthemes_pexels_api_key');
+        printf(
+            '<input type="text" name="bdthemes_pexels_api_key" value="%s" class="large-text" placeholder="" /><p class="description">%s</p>',
+            isset($api_key) ? esc_attr($api_key) : '',
+            esc_html__('Leave empty to use the default API key.', 'ai-image')
+        );
+    }
+
+    public function pixabay_settings_section() {
+        printf(
+            '<p>%s <strong>%s</strong></p>',
+            esc_html__('Pixabay works with a default API key. You can optionally provide your own API key from', 'ai-image'),
+            '<a href="https://pixabay.com/api/docs/" target="_blank" rel="noopener">' . esc_html__('Pixabay API', 'ai-image') . '</a>'
+        );
+    }
+
+    public function pixabay_api_key_callback() {
+        $api_key = get_option('bdthemes_pixabay_api_key');
+        printf(
+            '<input type="text" name="bdthemes_pixabay_api_key" value="%s" class="large-text" placeholder="" /><p class="description">%s</p>',
+            isset($api_key) ? esc_attr($api_key) : '',
+            esc_html__('Leave empty to use the default API key.', 'ai-image')
         );
     }
 

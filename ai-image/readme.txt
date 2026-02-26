@@ -1,7 +1,7 @@
-=== Instant Image Generator ===
+=== Instant Image Generator (AI Image by Gemini, Dall-E and One Click Image from Unsplash, Openverse, Pixabay, Pexels, Giphy) ===
 Contributors: bdthemes, selimmw, abutalib, mohammaadfarid, muhammadasik, arafatakashakku
 Tags: ai image generator, stock photos, pixabay, pexels, unsplash
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 7.0
 Requires at least: 5.0
 Tested up to: 6.9
@@ -247,7 +247,17 @@ To improve page performance and reduce visual clutter, **Giphy GIFs are displaye
 
 == Changelog ==
 
-= 2.0.0 [25th February 2026] =
+= 2.0.1 [26th February 2026] =
+
+* Added: Default API keys for Unsplash & Giphy (works without user configuration)
+* Added: Encrypted API key storage for enhanced security
+* Improved: All free image sources now work out of the box
+* Improved: Better code maintainability and performance
+* Improved: Enhanced API key protection system
+* Fixed: WordPress Plugin Checker compatibility issues
+* Fixed: Removed unused functions, variables, and imports
+
+= 2.0.0 [24th February 2026] =
 
 * Added: Complete plugin rebuild with React and Tailwind CSS for modern UI/UX
 * Added: Global Search — search across all image providers simultaneously

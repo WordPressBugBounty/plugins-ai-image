@@ -1,4 +1,23 @@
-## 2.0.0 [25th February 2026]
+## 2.0.1 [26th February 2026] 
+
+### Added
+
+- Default API keys for Unsplash & Giphy (works without user configuration)
+- Encrypted API key storage for enhanced security
+
+### Improved
+
+- All free image sources now work out of the box
+- Better code maintainability and performance
+- Enhanced API key protection system
+
+### Fixed
+
+- WordPress Plugin Checker compatibility issues
+- Removed unused functions, variables, and imports
+
+
+## 2.0.0 [24th February 2026]
 
 ### Added
 

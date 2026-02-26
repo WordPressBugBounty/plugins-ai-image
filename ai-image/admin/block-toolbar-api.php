@@ -10,6 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
+// Load plugin constants
+require_once plugin_dir_path( __FILE__ ) . 'constants.php';
+
 /**
  * Smart AI Image Generation with Fallback or Specific Provider
  * 
@@ -48,8 +51,9 @@ function ai_image_generate_smart_handler() {
 			wp_send_json_success( $result );
 		} else {
 			wp_send_json_error( array(
-				'message' => sprintf( 
-					__( 'Failed to generate image with %s: %s', 'ai-image' ),
+				'message' => sprintf(
+					/* translators: 1: provider name, 2: error message */
+					__( 'Failed to generate image with %1$s: %2$s', 'ai-image' ),
 					ucfirst( $requested_provider ),
 					$result->get_error_message()
 				)
@@ -109,6 +113,7 @@ function ai_image_generate_smart_handler() {
 		wp_send_json_success( array(
 			'image_url' => $result['url'],
 			'provider'  => $result['provider'],
+			/* translators: %s: provider name */
 			'message'   => sprintf( __( 'Image found on %s', 'ai-image' ), $result['provider'] )
 		) );
 	}
@@ -116,15 +121,17 @@ function ai_image_generate_smart_handler() {
 	// If all fail, return detailed error
 	$error_message = __( 'Failed to generate image with all available providers.', 'ai-image' );
 	if ( ! empty( $skipped_providers ) ) {
-		$error_message .= ' ' . sprintf( 
-			__( 'Skipped: %s.', 'ai-image' ), 
-			implode( ', ', $skipped_providers ) 
+		$error_message .= ' ' . sprintf(
+			/* translators: %s: comma-separated list of skipped providers */
+			__( 'Skipped: %s.', 'ai-image' ),
+			implode( ', ', $skipped_providers )
 		);
 	}
 	if ( ! empty( $attempted_providers ) ) {
-		$error_message .= ' ' . sprintf( 
-			__( 'Tried but failed: %s.', 'ai-image' ), 
-			implode( ', ', $attempted_providers ) 
+		$error_message .= ' ' . sprintf(
+			/* translators: %s: comma-separated list of attempted providers */
+			__( 'Tried but failed: %s.', 'ai-image' ),
+			implode( ', ', $attempted_providers )
 		);
 	}
 	$error_message .= ' ' . __( 'Please check your API keys and provider settings.', 'ai-image' );
@@ -146,7 +153,8 @@ function ai_image_try_specific_provider( $provider, $prompt ) {
 	$enabled = get_option( 'bdthemes_ai_image_provider_' . $provider, '1' ) === '1';
 	if ( ! $enabled ) {
 		return new \WP_Error( 
-			'provider_disabled', 
+			'provider_disabled',
+			/* translators: %s: provider name */
 			sprintf( __( '%s is disabled in settings', 'ai-image' ), ucfirst( $provider ) )
 		);
 	}
@@ -203,10 +211,11 @@ function ai_image_try_specific_provider( $provider, $prompt ) {
 		return array(
 			'image_url' => $result,
 			'provider'  => ucfirst( $provider ),
+			/* translators: %s: provider name */
 			'message'   => sprintf( __( 'Image found on %s', 'ai-image' ), ucfirst( $provider ) )
 		);
 	}
-	
+
 	return new \WP_Error( 'unknown_provider', __( 'Unknown provider', 'ai-image' ) );
 }
 
@@ -366,9 +375,13 @@ function ai_image_fetch_from_provider( $provider, $query ) {
  * Fetch from Pexels
  */
 function ai_image_fetch_from_pexels( $query ) {
-	// Pexels is free and doesn't require API key for basic usage
-	// If you have an API key, it should be configured
-	$api_key = 'l7Pk56fQ7sjfslcgFBUXVuggY5sZ2EIRLtSvM1pBwLyzpIWjdQ93gVpH';
+	// Default Pexels API key
+	$default_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_PEXELS_DEFAULT_KEY );
+	
+	// Try to get custom API key from settings, fallback to default
+	$custom_key = get_option( 'bdthemes_pexels_api_key' );
+	$custom_key = is_string( $custom_key ) ? trim( $custom_key ) : '';
+	$api_key = ! empty( $custom_key ) ? $custom_key : $default_key;
 	
 	if ( empty( $api_key ) ) {
 		return new \WP_Error( 'pexels_no_key', __( 'Pexels API key not configured', 'ai-image' ) );
@@ -387,7 +400,26 @@ function ai_image_fetch_from_pexels( $query ) {
 		return $response;
 	}
 	
-	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+	$code = wp_remote_retrieve_response_code( $response );
+	$response_body = wp_remote_retrieve_body( $response );
+	
+	// Check for HTTP errors (authentication, rate limit, etc.)
+	if ( $code !== 200 ) {
+		if ( $code === 401 || $code === 403 ) {
+			$error_msg = __( 'Invalid Pexels API key. Please check your API key in settings.', 'ai-image' );
+		} else {
+			/* translators: %s: HTTP error code */
+			$error_msg = $response_body ? $response_body : sprintf( __( 'Pexels API request failed with code: %s', 'ai-image' ), $code );
+		}
+		return new \WP_Error( 'pexels_failed', $error_msg );
+	}
+	
+	$data = json_decode( $response_body, true );
+	
+	// Check for JSON decode errors
+	if ( json_last_error() !== JSON_ERROR_NONE ) {
+		return new \WP_Error( 'pexels_json_error', __( 'Invalid JSON response from Pexels', 'ai-image' ) );
+	}
 	
 	if ( isset( $data['photos'][0]['src']['large'] ) ) {
 		return $data['photos'][0]['src']['large'];
@@ -400,8 +432,13 @@ function ai_image_fetch_from_pexels( $query ) {
  * Fetch from Pixabay
  */
 function ai_image_fetch_from_pixabay( $query ) {
-	// Pixabay has a fixed API key
-	$api_key = '27427772-5e3b7770787f4e0e591d5d2eb';
+	// Default Pixabay API key
+	$default_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_PIXABAY_DEFAULT_KEY );
+	
+	// Try to get custom API key from settings, fallback to default
+	$custom_key = get_option( 'bdthemes_pixabay_api_key' );
+	$custom_key = is_string( $custom_key ) ? trim( $custom_key ) : '';
+	$api_key = ! empty( $custom_key ) ? $custom_key : $default_key;
 	
 	if ( empty( $api_key ) ) {
 		return new \WP_Error( 'pixabay_no_key', __( 'Pixabay API key not configured', 'ai-image' ) );
@@ -434,7 +471,8 @@ function ai_image_fetch_from_pixabay( $query ) {
 	// Check for HTTP errors first (before JSON decode)
 	if ( $code !== 200 ) {
 		// Pixabay returns plain text errors for 400 codes
-		$error_msg = $response_body ? $response_body : __( 'Pixabay API request failed with code: ' . $code, 'ai-image' );
+		/* translators: %s: HTTP error code */
+		$error_msg = $response_body ? $response_body : sprintf( __( 'Pixabay API request failed with code: %s', 'ai-image' ), $code );
 		return new \WP_Error( 'pixabay_failed', $error_msg );
 	}
 	
@@ -455,16 +493,22 @@ function ai_image_fetch_from_pixabay( $query ) {
 	
 	// Log the total hits count if available
 	$total_hits = isset( $data['totalHits'] ) ? $data['totalHits'] : 'unknown';
-	
-	return new \WP_Error( 'pixabay_no_results', __( 'No results from Pixabay for query: ' . $search_query, 'ai-image' ) );
+
+	/* translators: %s: search query */
+	return new \WP_Error( 'pixabay_no_results', sprintf( __( 'No results from Pixabay for query: %s', 'ai-image' ), $search_query ) );
 }
 
 /**
  * Fetch from Unsplash
  */
 function ai_image_fetch_from_unsplash( $query ) {
-	$api_key = get_option( 'bdthemes_unsplash_access_key', '' );
-	$api_key = is_string( $api_key ) ? trim( $api_key ) : '';
+	// Default Unsplash API key
+	$default_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_UNSPLASH_DEFAULT_KEY );
+	
+	// Try to get custom API key from settings, fallback to default
+	$custom_key = get_option( 'bdthemes_unsplash_access_key' );
+	$custom_key = is_string( $custom_key ) ? trim( $custom_key ) : '';
+	$api_key = ! empty( $custom_key ) ? $custom_key : $default_key;
 	
 	if ( empty( $api_key ) ) {
 		return new \WP_Error( 'unsplash_no_key', __( 'Unsplash API key not configured', 'ai-image' ) );
@@ -483,7 +527,26 @@ function ai_image_fetch_from_unsplash( $query ) {
 		return $response;
 	}
 	
-	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+	$code = wp_remote_retrieve_response_code( $response );
+	$response_body = wp_remote_retrieve_body( $response );
+	
+	// Check for HTTP errors (authentication, rate limit, etc.)
+	if ( $code !== 200 ) {
+		if ( $code === 401 || $code === 403 ) {
+			$error_msg = __( 'Invalid Unsplash API key. Please check your API key in settings.', 'ai-image' );
+		} else {
+			/* translators: %s: HTTP error code */
+			$error_msg = $response_body ? $response_body : sprintf( __( 'Unsplash API request failed with code: %s', 'ai-image' ), $code );
+		}
+		return new \WP_Error( 'unsplash_failed', $error_msg );
+	}
+	
+	$data = json_decode( $response_body, true );
+	
+	// Check for JSON decode errors
+	if ( json_last_error() !== JSON_ERROR_NONE ) {
+		return new \WP_Error( 'unsplash_json_error', __( 'Invalid JSON response from Unsplash', 'ai-image' ) );
+	}
 	
 	if ( isset( $data['results'][0]['urls']['regular'] ) ) {
 		return $data['results'][0]['urls']['regular'];
@@ -517,7 +580,8 @@ function ai_image_fetch_from_openverse( $query ) {
 	
 	// Check for HTTP errors
 	if ( $code !== 200 ) {
-		$error_msg = __( 'Openverse API request failed with code: ' . $code, 'ai-image' );
+		/* translators: %s: HTTP error code */
+		$error_msg = sprintf( __( 'Openverse API request failed with code: %s', 'ai-image' ), $code );
 		return new \WP_Error( 'openverse_failed', $error_msg );
 	}
 	
@@ -537,8 +601,9 @@ function ai_image_fetch_from_openverse( $query ) {
 	}
 	
 	$result_count = isset( $data['result_count'] ) ? $data['result_count'] : 'unknown';
-	
-	return new \WP_Error( 'openverse_no_results', __( 'No results from Openverse for query: ' . $search_query, 'ai-image' ) );
+
+	/* translators: %s: search query */
+	return new \WP_Error( 'openverse_no_results', sprintf( __( 'No results from Openverse for query: %s', 'ai-image' ), $search_query ) );
 }
 
 /**
@@ -565,8 +630,13 @@ function ai_image_simplify_query_for_openverse( $query ) {
  * Fetch from Giphy
  */
 function ai_image_fetch_from_giphy( $query ) {
-	$api_key = get_option( 'bdthemes_giphy_api_key', '' );
-	$api_key = is_string( $api_key ) ? trim( $api_key ) : '';
+	// Default Giphy API key
+	$default_key = \BDT_AI_IMG\decrypt_key( AI_IMAGE_GIPHY_DEFAULT_KEY );
+	
+	// Try to get custom API key from settings, fallback to default
+	$custom_key = get_option( 'bdthemes_giphy_api_key' );
+	$custom_key = is_string( $custom_key ) ? trim( $custom_key ) : '';
+	$api_key = ! empty( $custom_key ) ? $custom_key : $default_key;
 	
 	if ( empty( $api_key ) ) {
 		return new \WP_Error( 'giphy_no_key', __( 'Giphy API key not configured', 'ai-image' ) );
@@ -593,7 +663,8 @@ function ai_image_fetch_from_giphy( $query ) {
 	
 	// Check for HTTP errors
 	if ( $code !== 200 ) {
-		$error_msg = __( 'Giphy API request failed with code: ' . $code, 'ai-image' );
+		/* translators: %s: HTTP error code */
+		$error_msg = sprintf( __( 'Giphy API request failed with code: %s', 'ai-image' ), $code );
 		return new \WP_Error( 'giphy_failed', $error_msg );
 	}
 	
@@ -613,8 +684,9 @@ function ai_image_fetch_from_giphy( $query ) {
 	}
 	
 	$result_count = isset( $data['pagination']['total_count'] ) ? $data['pagination']['total_count'] : 'unknown';
-	
-	return new \WP_Error( 'giphy_no_results', __( 'No results from Giphy for query: ' . $search_query, 'ai-image' ) );
+
+	/* translators: %s: search query */
+	return new \WP_Error( 'giphy_no_results', sprintf( __( 'No results from Giphy for query: %s', 'ai-image' ), $search_query ) );
 }
 
 /**

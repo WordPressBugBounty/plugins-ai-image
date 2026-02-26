@@ -67,6 +67,18 @@ class BDTHEMES_AI_IMAGE_KEYS_REST_CONTROLLER extends WP_REST_Controller {
 
 	public function register_rest_routes() {
 		$permission = [ $this, 'api_key_permission_check' ];
+		register_rest_route( $this->namespace, 'pexels/api-key', [
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'get_pexels_api_key' ],
+				'permission_callback' => $permission,
+			],
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'get_pexels_api_key' ],
+				'permission_callback' => $permission,
+			],
+		] );
 		register_rest_route( $this->namespace, 'unsplash/api-key', [
 			[
 				'methods'             => 'GET',
@@ -76,6 +88,18 @@ class BDTHEMES_AI_IMAGE_KEYS_REST_CONTROLLER extends WP_REST_Controller {
 			[
 				'methods'             => 'POST',
 				'callback'            => [ $this, 'get_unsplash_api_key' ],
+				'permission_callback' => $permission,
+			],
+		] );
+		register_rest_route( $this->namespace, 'pixabay/api-key', [
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'get_pixabay_api_key' ],
+				'permission_callback' => $permission,
+			],
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'get_pixabay_api_key' ],
 				'permission_callback' => $permission,
 			],
 		] );
@@ -113,8 +137,24 @@ class BDTHEMES_AI_IMAGE_KEYS_REST_CONTROLLER extends WP_REST_Controller {
 		return current_user_can( 'manage_options' );
 	}
 
+	public function get_pexels_api_key( WP_REST_Request $request ) {
+		$api_key = get_option( 'bdthemes_pexels_api_key' );
+		$api_key = is_string( $api_key ) ? trim( $api_key ) : '';
+		return new WP_REST_Response( [
+			'api_key' => $api_key ? sanitize_text_field( $api_key ) : null,
+		], 200 );
+	}
+
 	public function get_unsplash_api_key( WP_REST_Request $request ) {
 		$api_key = get_option( 'bdthemes_unsplash_access_key' );
+		$api_key = is_string( $api_key ) ? trim( $api_key ) : '';
+		return new WP_REST_Response( [
+			'api_key' => $api_key ? sanitize_text_field( $api_key ) : null,
+		], 200 );
+	}
+
+	public function get_pixabay_api_key( WP_REST_Request $request ) {
+		$api_key = get_option( 'bdthemes_pixabay_api_key' );
 		$api_key = is_string( $api_key ) ? trim( $api_key ) : '';
 		return new WP_REST_Response( [
 			'api_key' => $api_key ? sanitize_text_field( $api_key ) : null,
