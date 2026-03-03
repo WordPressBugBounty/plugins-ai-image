@@ -35,7 +35,8 @@ class BDTHEMES_OPENAI_ADMIN_SETTINGS_PAGE {
         add_settings_field('bdthemes_pixabay_api_key', __('Pixabay API Key (Optional)', 'ai-image'), [$this, 'pixabay_api_key_callback'], 'bdthemes-ai-image-options', 'bdthemes_pixabay_section');
         register_setting('bdthemes-ai-image-options', 'bdthemes_pixabay_api_key', ['sanitize_callback' => function( $v ) { return sanitize_text_field( is_string( $v ) ? trim( $v ) : $v ); }]);
 
-        $provider_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
+
+		$provider_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy', 'openai', 'gemini' );
         $sanitize_provider = function( $v ) {
             if ( $v === true || $v === '1' || $v === 1 ) return '1';
             return '0';

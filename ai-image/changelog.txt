@@ -1,3 +1,21 @@
+## 2.1.0 [3rd March 2026] 
+
+### Added
+
+- Wikimedia Commons image provider tab support in dashboard and Global Search
+- Wikimedia provider filters (Media Type, Sort)
+- Wikimedia support in Block Toolbar "Generate Image" provider menu and smart fallback flow
+- Admin API notification system with countdown timers
+
+### Improved
+
+- Wikimedia search handling and result ordering in proxy endpoint
+
+### Fixed
+
+- First-install imports no longer auto-apply Alt Text, Image Title, or Attribution until saved in settings
+
+
 ## 2.0.1 [26th February 2026] 
 
 ### Added

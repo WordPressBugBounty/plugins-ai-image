@@ -2,13 +2,13 @@
 # This file is distributed under the GPLv3 license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Instant Image Generator 2.0.1\n"
+"Project-Id-Version: Instant Image Generator 2.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugins/ai-image\n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"POT-Creation-Date: 2026-02-26T05:00:39.446Z\n"
+"POT-Creation-Date: 2026-03-03T05:32:46.169Z\n"
 "PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BdThemes <info@bdthemes.com>\n"
 "Language-Team: BdThemes <info@bdthemes.com>\n"
@@ -190,75 +190,75 @@ msgid "Pixabay API Key (Optional)"
 msgstr ""
 
 # %s: Link to OpenAI API keys page
-#: admin/settings.php:81
+#: admin/settings.php:82
 msgid "Please enter your Openai API key. You can get your API key from %s ."
 msgstr ""
 
 # %s: Link to OpenAI documentation
-#: admin/settings.php:86
+#: admin/settings.php:87
 msgid "Learn more about %s"
 msgstr ""
 
-#: admin/settings.php:102
+#: admin/settings.php:103
 msgid ""
 "Unsplash works with a default API key. You can optionally provide your own "
 "Access Key from"
 msgstr ""
 
-#: admin/settings.php:103
+#: admin/settings.php:104
 msgid "Unsplash Developers"
 msgstr ""
 
-#: admin/settings.php:112
-#: admin/settings.php:129
-#: admin/settings.php:162
-#: admin/settings.php:179
+#: admin/settings.php:113
+#: admin/settings.php:130
+#: admin/settings.php:163
+#: admin/settings.php:180
 msgid "Leave empty to use the default API key."
 msgstr ""
 
-#: admin/settings.php:119
+#: admin/settings.php:120
 msgid ""
 "Giphy works with a default API key. You can optionally provide your own API "
 "key from"
 msgstr ""
 
-#: admin/settings.php:120
+#: admin/settings.php:121
 msgid "GIPHY Developers"
 msgstr ""
 
-#: admin/settings.php:136
+#: admin/settings.php:137
 msgid "Get your free Google Gemini API key from"
 msgstr ""
 
-#: admin/settings.php:137
+#: admin/settings.php:138
 msgid "Google AI Studio"
 msgstr ""
 
-#: admin/settings.php:152
+#: admin/settings.php:153
 msgid ""
 "Pexels works with a default API key. You can optionally provide your own "
 "API key from"
 msgstr ""
 
-#: admin/settings.php:153
+#: admin/settings.php:154
 msgid "Pexels API"
 msgstr ""
 
-#: admin/settings.php:169
+#: admin/settings.php:170
 msgid ""
 "Pixabay works with a default API key. You can optionally provide your own "
 "API key from"
 msgstr ""
 
-#: admin/settings.php:170
+#: admin/settings.php:171
 msgid "Pixabay API"
 msgstr ""
 
-#: admin/settings.php:192
+#: admin/settings.php:193
 msgid "Go to Settings"
 msgstr ""
 
-#: admin/settings.php:192
+#: admin/settings.php:193
 msgid "Settings"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgid "OpenAI API key not configured"
 msgstr ""
 
 #: admin/block-toolbar-api.php:219
-#: admin/block-toolbar-api.php:370
+#: admin/block-toolbar-api.php:372
 msgid "Unknown provider"
 msgstr ""
 
@@ -339,101 +339,118 @@ msgstr ""
 msgid "All image providers failed."
 msgstr ""
 
-#: admin/block-toolbar-api.php:387
+#: admin/block-toolbar-api.php:389
 msgid "Pexels API key not configured"
 msgstr ""
 
-#: admin/block-toolbar-api.php:409
+#: admin/block-toolbar-api.php:411
 msgid "Invalid Pexels API key. Please check your API key in settings."
 msgstr ""
 
-#: admin/block-toolbar-api.php:412
+#: admin/block-toolbar-api.php:414
 msgid "Pexels API request failed with code: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:421
+#: admin/block-toolbar-api.php:423
 msgid "Invalid JSON response from Pexels"
 msgstr ""
 
-#: admin/block-toolbar-api.php:428
+#: admin/block-toolbar-api.php:430
 msgid "No results from Pexels"
 msgstr ""
 
-#: admin/block-toolbar-api.php:444
+#: admin/block-toolbar-api.php:446
 msgid "Pixabay API key not configured"
 msgstr ""
 
-#: admin/block-toolbar-api.php:449
+#: admin/block-toolbar-api.php:451
 msgid "Empty search query for Pixabay"
 msgstr ""
 
-#: admin/block-toolbar-api.php:475
+#: admin/block-toolbar-api.php:477
 msgid "Pixabay API request failed with code: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:483
+#: admin/block-toolbar-api.php:485
 msgid "Invalid JSON response from Pixabay"
 msgstr ""
 
-#: admin/block-toolbar-api.php:498
+#: admin/block-toolbar-api.php:500
 msgid "No results from Pixabay for query: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:514
+#: admin/block-toolbar-api.php:516
 msgid "Unsplash API key not configured"
 msgstr ""
 
-#: admin/block-toolbar-api.php:536
+#: admin/block-toolbar-api.php:538
 msgid "Invalid Unsplash API key. Please check your API key in settings."
 msgstr ""
 
-#: admin/block-toolbar-api.php:539
+#: admin/block-toolbar-api.php:541
 msgid "Unsplash API request failed with code: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:548
+#: admin/block-toolbar-api.php:550
 msgid "Invalid JSON response from Unsplash"
 msgstr ""
 
-#: admin/block-toolbar-api.php:555
+#: admin/block-toolbar-api.php:557
 msgid "No results from Unsplash"
 msgstr ""
 
-#: admin/block-toolbar-api.php:564
+#: admin/block-toolbar-api.php:566
 msgid "Empty search query for Openverse"
 msgstr ""
 
 # %s: HTTP error code
-#: admin/block-toolbar-api.php:584
+#: admin/block-toolbar-api.php:586
 msgid "Openverse API request failed with code: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:592
+#: admin/block-toolbar-api.php:594
 msgid "Invalid JSON response from Openverse"
 msgstr ""
 
-#: admin/block-toolbar-api.php:606
+#: admin/block-toolbar-api.php:608
 msgid "No results from Openverse for query: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:642
+#: admin/block-toolbar-api.php:617
+msgid "Empty search query for Wikimedia"
+msgstr ""
+
+# %s: HTTP error code
+#: admin/block-toolbar-api.php:646
+msgid "Wikimedia API request failed with code: %s"
+msgstr ""
+
+#: admin/block-toolbar-api.php:652
+msgid "Invalid JSON response from Wikimedia"
+msgstr ""
+
+#: admin/block-toolbar-api.php:664
+msgid "No results from Wikimedia for query: %s"
+msgstr ""
+
+#: admin/block-toolbar-api.php:700
 msgid "Giphy API key not configured"
 msgstr ""
 
-#: admin/block-toolbar-api.php:647
+#: admin/block-toolbar-api.php:705
 msgid "Empty search query for Giphy"
 msgstr ""
 
 # %s: HTTP error code
-#: admin/block-toolbar-api.php:667
+#: admin/block-toolbar-api.php:725
 msgid "Giphy API request failed with code: %s"
 msgstr ""
 
-#: admin/block-toolbar-api.php:675
+#: admin/block-toolbar-api.php:733
 msgid "Invalid JSON response from Giphy"
 msgstr ""
 
-#: admin/block-toolbar-api.php:689
+#: admin/block-toolbar-api.php:747
 msgid "No results from Giphy for query: %s"
 msgstr ""
 
@@ -483,25 +500,29 @@ msgid "Openverse"
 msgstr ""
 
 #: src/admin/block-toolbar/index.js:257
+msgid "Wikimedia"
+msgstr ""
+
+#: src/admin/block-toolbar/index.js:258
 msgid "Giphy"
 msgstr ""
 
-#: src/admin/block-toolbar/index.js:277
+#: src/admin/block-toolbar/index.js:278
 msgid "Generate AI Image"
 msgstr ""
 
-#: src/admin/block-toolbar/index.js:278
+#: src/admin/block-toolbar/index.js:279
 msgid "Generating..."
 msgstr ""
 
-#: src/admin/block-toolbar/index.js:278
+#: src/admin/block-toolbar/index.js:279
 msgid "Generate Image"
 msgstr ""
 
-#: src/admin/block-toolbar/index.js:283
+#: src/admin/block-toolbar/index.js:284
 msgid "Choose Provider"
 msgstr ""
 
-#: src/admin/block-toolbar/index.js:291
+#: src/admin/block-toolbar/index.js:292
 msgid "Auto (Smart Fallback)"
 msgstr ""

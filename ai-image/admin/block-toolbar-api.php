@@ -107,7 +107,7 @@ function ai_image_generate_smart_handler() {
 		}
 	}
 	
-	// Try other providers as fallback (Pexels, Pixabay, Unsplash, Openverse)
+	// Try other providers as fallback (Pexels, Pixabay, Unsplash, Openverse, Wikimedia)
 	$result = ai_image_try_free_providers( $prompt, $attempted_providers, $skipped_providers );
 	if ( ! is_wp_error( $result ) ) {
 		wp_send_json_success( array(
@@ -201,7 +201,7 @@ function ai_image_try_specific_provider( $provider, $prompt ) {
 	}
 	
 	// Handle free stock photo providers
-	$free_providers = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy' );
+	$free_providers = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy' );
 	if ( in_array( $provider, $free_providers, true ) ) {
 		$result = ai_image_fetch_from_provider( $provider, $prompt );
 		if ( is_wp_error( $result ) ) {
@@ -317,7 +317,7 @@ function ai_image_try_openai( $prompt, $api_key ) {
  */
 function ai_image_try_free_providers( $prompt, &$attempted_providers, &$skipped_providers ) {
 	// Get provider order from settings
-	$default_order = array( 'pexels', 'pixabay', 'unsplash', 'openverse' );
+	$default_order = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy' );
 	$saved_order   = get_option( 'bdthemes_ai_image_provider_order', $default_order );
 	
 	if ( ! is_array( $saved_order ) || empty( $saved_order ) ) {
@@ -325,7 +325,7 @@ function ai_image_try_free_providers( $prompt, &$attempted_providers, &$skipped_
 	}
 	
 	// Filter to only free providers
-	$free_providers = array_intersect( $saved_order, array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy' ) );
+	$free_providers = array_intersect( $saved_order, array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy' ) );
 	
 	foreach ( $free_providers as $provider ) {
 		// Check if provider is enabled
@@ -364,6 +364,8 @@ function ai_image_fetch_from_provider( $provider, $query ) {
 			return ai_image_fetch_from_unsplash( $query );
 		case 'openverse':
 			return ai_image_fetch_from_openverse( $query );
+		case 'wikimedia':
+			return ai_image_fetch_from_wikimedia( $query );
 		case 'giphy':
 			return ai_image_fetch_from_giphy( $query );
 		default:
@@ -604,6 +606,62 @@ function ai_image_fetch_from_openverse( $query ) {
 
 	/* translators: %s: search query */
 	return new \WP_Error( 'openverse_no_results', sprintf( __( 'No results from Openverse for query: %s', 'ai-image' ), $search_query ) );
+}
+
+/**
+ * Fetch from Wikimedia Commons
+ */
+function ai_image_fetch_from_wikimedia( $query ) {
+	$search_query = trim( (string) $query );
+	if ( '' === $search_query ) {
+		return new \WP_Error( 'wikimedia_empty_query', __( 'Empty search query for Wikimedia', 'ai-image' ) );
+	}
+
+	$api_url = add_query_arg( [
+		'action'        => 'query',
+		'generator'     => 'search',
+		'gsrsearch'     => $search_query,
+		'gsrnamespace'  => 6,
+		'gsrlimit'      => 1,
+		'prop'          => 'imageinfo',
+		'iiprop'        => 'url',
+		'format'        => 'json',
+		'formatversion' => 2,
+		'origin'        => '*',
+	], 'https://commons.wikimedia.org/w/api.php' );
+
+	$response = wp_remote_get( $api_url, [
+		'timeout' => 30,
+	] );
+
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	$code = wp_remote_retrieve_response_code( $response );
+	$body = wp_remote_retrieve_body( $response );
+
+	if ( 200 !== $code ) {
+		/* translators: %s: HTTP error code */
+		$error_msg = sprintf( __( 'Wikimedia API request failed with code: %s', 'ai-image' ), $code );
+		return new \WP_Error( 'wikimedia_failed', $error_msg );
+	}
+
+	$data = json_decode( $body, true );
+	if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $data ) ) {
+		return new \WP_Error( 'wikimedia_json_error', __( 'Invalid JSON response from Wikimedia', 'ai-image' ) );
+	}
+
+	if ( isset( $data['query']['pages'] ) && is_array( $data['query']['pages'] ) ) {
+		foreach ( $data['query']['pages'] as $page_item ) {
+			if ( isset( $page_item['imageinfo'][0]['url'] ) && ! empty( $page_item['imageinfo'][0]['url'] ) ) {
+				return $page_item['imageinfo'][0]['url'];
+			}
+		}
+	}
+
+	/* translators: %s: search query */
+	return new \WP_Error( 'wikimedia_no_results', sprintf( __( 'No results from Wikimedia for query: %s', 'ai-image' ), $search_query ) );
 }
 
 /**

@@ -87,16 +87,16 @@ final class Plugin {
 
 		wp_enqueue_script( 'ai-image' );
 
-		$provider_ids = array( 'global', 'pexels', 'pixabay', 'openverse', 'unsplash',  'giphy', 'openai', 'gemini' );
+		$provider_ids = array( 'global', 'pexels', 'pixabay', 'openverse', 'wikimedia', 'unsplash', 'giphy', 'openai', 'gemini' );
 		$provider_enabled = array();
-		$enabled_by_default = array( 'global', 'pexels', 'pixabay', 'openverse', 'unsplash', 'giphy' );
+		$enabled_by_default = array( 'global', 'pexels', 'pixabay', 'openverse', 'wikimedia', 'unsplash', 'giphy' );
 		foreach ( $provider_ids as $id ) {
 			$default_value = in_array( $id, $enabled_by_default, true ) ? '1' : '0';
 			$val = get_option( 'bdthemes_ai_image_provider_' . $id, $default_value );
 			$provider_enabled[ $id ] = ( $val === '1' || $val === true );
 		}
 
-		$default_order = array( 'pexels', 'pixabay','openverse', 'unsplash', 'giphy', 'openai', 'gemini' );
+		$default_order = array( 'pexels', 'pixabay', 'openverse', 'wikimedia', 'unsplash', 'giphy', 'openai', 'gemini' );
 		$saved_order   = get_option( 'bdthemes_ai_image_provider_order', $default_order );
 		if ( ! is_array( $saved_order ) || empty( $saved_order ) ) {
 			$saved_order = $default_order;
@@ -182,10 +182,10 @@ final class Plugin {
 		);
 		
 		// Check if any provider is enabled and build enabled providers list
-		$provider_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
+		$provider_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy', 'openai', 'gemini' );
 		$has_enabled_provider = false;
 		$enabled_providers = array();
-		$enabled_by_default = array( 'pexels', 'pixabay', 'openverse', 'unsplash', 'giphy' );
+		$enabled_by_default = array( 'pexels', 'pixabay', 'openverse', 'wikimedia', 'unsplash', 'giphy' );
 		
 		foreach ( $provider_ids as $id ) {
 			$default_value = in_array( $id, $enabled_by_default, true ) ? '1' : '0';
@@ -197,7 +197,7 @@ final class Plugin {
 		}
 		
 		// Get provider order from settings
-		$default_order = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
+		$default_order = array( 'pexels', 'pixabay', 'openverse', 'wikimedia', 'unsplash', 'giphy', 'openai', 'gemini' );
 		$saved_order   = get_option( 'bdthemes_ai_image_provider_order', $default_order );
 		if ( ! is_array( $saved_order ) || empty( $saved_order ) ) {
 			$saved_order = $default_order;
@@ -471,8 +471,8 @@ MEDIAJS;
 		}
 
 		// Read user settings for auto-populating metadata
-		$auto_alt_text       = get_option( 'bdthemes_ai_image_auto_alt_text', '1' ) === '1';
-		$auto_title          = get_option( 'bdthemes_ai_image_auto_title', '1' ) === '1';
+		$auto_alt_text       = get_option( 'bdthemes_ai_image_auto_alt_text', '0' ) === '1';
+		$auto_title          = get_option( 'bdthemes_ai_image_auto_title', '0' ) === '1';
 		$image_attribution   = get_option( 'bdthemes_ai_image_attribution', '0' ) === '1';
 
 		// Determine the WP attachment title
@@ -819,7 +819,7 @@ MEDIAJS;
 		if ( isset( $input['pixabay_api_key'] ) ) {
 			update_option( 'bdthemes_pixabay_api_key', sanitize_text_field( is_string( $input['pixabay_api_key'] ) ? trim( $input['pixabay_api_key'] ) : '' ) );
 		}
-		$provider_ids = array( 'global', 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
+		$provider_ids = array( 'global', 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy', 'openai', 'gemini' );
 		foreach ( $provider_ids as $id ) {
 			$key = 'provider_' . $id;
 			if ( array_key_exists( $key, $input ) ) {
@@ -872,7 +872,7 @@ MEDIAJS;
 			update_option( 'bdthemes_ai_image_load_more_mode', in_array( $mode, $allowed_modes, true ) ? $mode : 'auto' );
 		}
 		if ( array_key_exists( 'provider_order', $input ) && is_array( $input['provider_order'] ) ) {
-			$valid_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
+			$valid_ids = array( 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy', 'openai', 'gemini' );
 			$order     = array_values( array_intersect( array_map( 'sanitize_text_field', $input['provider_order'] ), $valid_ids ) );
 			if ( ! empty( $order ) ) {
 				update_option( 'bdthemes_ai_image_provider_order', $order );

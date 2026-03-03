@@ -78,6 +78,20 @@ class API_Proxy_REST_Controller extends \WP_REST_Controller {
 				'limit'    => [ 'default' => 30, 'type' => 'integer' ],
 			],
 		] );
+
+		// Wikimedia Commons proxy
+		register_rest_route( $this->namespace, $this->rest_base . '/wikimedia/search', [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'proxy_wikimedia_search' ],
+			'permission_callback' => $permission,
+			'args'                => [
+				'query'    => [ 'required' => true, 'type' => 'string' ],
+				'page'     => [ 'default' => 1, 'type' => 'integer' ],
+				'per_page' => [ 'default' => 30, 'type' => 'integer' ],
+				'media_type' => [ 'default' => '', 'type' => 'string' ],
+				'sort'       => [ 'default' => 'relevance', 'type' => 'string' ],
+			],
+		] );
 	}
 
 	/**
@@ -303,6 +317,140 @@ class API_Proxy_REST_Controller extends \WP_REST_Controller {
 		$data = json_decode( $body, true );
 
 		return new \WP_REST_Response( $data, wp_remote_retrieve_response_code( $response ) );
+	}
+
+	/**
+	 * Proxy Wikimedia Commons search API
+	 */
+	public function proxy_wikimedia_search( \WP_REST_Request $request ) {
+		$query    = trim( (string) $request->get_param( 'query' ) );
+		$page     = max( 1, (int) $request->get_param( 'page' ) );
+		$per_page = max( 1, min( 50, (int) $request->get_param( 'per_page' ) ) );
+		$offset   = ( $page - 1 ) * $per_page;
+
+		$media_type = strtolower( trim( (string) $request->get_param( 'media_type' ) ) );
+		$sort       = strtolower( trim( (string) $request->get_param( 'sort' ) ) );
+
+		$allowed_media_types = [ '', 'image', 'vector' ];
+		if ( ! in_array( $media_type, $allowed_media_types, true ) ) {
+			$media_type = '';
+		}
+
+		$allowed_sorts = [ 'relevance', 'newest', 'oldest' ];
+		if ( ! in_array( $sort, $allowed_sorts, true ) ) {
+			$sort = 'relevance';
+		}
+
+		$api_limit  = min( 50, $per_page * 3 );
+		$gsr_search = $query;
+		if ( $media_type === 'vector' ) {
+			$gsr_search .= ' filetype:drawing';
+		} elseif ( $media_type === 'image' ) {
+			$gsr_search .= ' filetype:bitmap';
+		}
+
+		$api_url = add_query_arg( [
+			'action'        => 'query',
+			'generator'     => 'search',
+			'gsrsearch'     => $gsr_search,
+			'gsrnamespace'  => 6,
+			'gsrlimit'      => $api_limit,
+			'gsroffset'     => $offset,
+			'prop'          => 'imageinfo|info',
+			'inprop'        => 'url',
+			'iiprop'        => 'url|user|mime|timestamp|extmetadata',
+			'iiurlwidth'    => 1200,
+			'format'        => 'json',
+			'formatversion' => 2,
+			'origin'        => '*',
+		], 'https://commons.wikimedia.org/w/api.php' );
+
+		$response = wp_remote_get( $api_url, [
+			'timeout' => 30,
+		] );
+
+		if ( is_wp_error( $response ) ) {
+			return new \WP_Error( 'api_error', $response->get_error_message(), [ 'status' => 500 ] );
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		$data = json_decode( $body, true );
+
+		if ( ! is_array( $data ) ) {
+			return new \WP_Error( 'api_error', 'Invalid Wikimedia API response.', [ 'status' => 500 ] );
+		}
+
+		$pages = array();
+		if ( isset( $data['query']['pages'] ) && is_array( $data['query']['pages'] ) ) {
+			$pages = $data['query']['pages'];
+		}
+
+		$results = array();
+		foreach ( $pages as $page_item ) {
+			$image_info = null;
+			if ( isset( $page_item['imageinfo'][0] ) && is_array( $page_item['imageinfo'][0] ) ) {
+				$image_info = $page_item['imageinfo'][0];
+			}
+
+			if ( ! $image_info || empty( $image_info['url'] ) ) {
+				continue;
+			}
+
+			$title = isset( $page_item['title'] ) ? $page_item['title'] : '';
+			$title = preg_replace( '/^File:/', '', $title );
+
+			$author = isset( $image_info['user'] ) ? $image_info['user'] : '';
+			$mime = isset( $image_info['mime'] ) ? strtolower( (string) $image_info['mime'] ) : '';
+			$timestamp = isset( $image_info['timestamp'] ) ? (string) $image_info['timestamp'] : '';
+
+			if ( $media_type === 'vector' && $mime !== 'image/svg+xml' ) {
+				continue;
+			}
+
+			if ( $media_type === 'image' && ( strpos( $mime, 'image/' ) !== 0 || in_array( $mime, [ 'image/svg+xml', 'image/gif' ], true ) ) ) {
+				continue;
+			}
+
+			$description = '';
+			if ( isset( $image_info['extmetadata']['ImageDescription']['value'] ) ) {
+				$description = wp_strip_all_tags( $image_info['extmetadata']['ImageDescription']['value'] );
+			}
+
+			$results[] = array(
+				'id'          => isset( $page_item['pageid'] ) ? (string) $page_item['pageid'] : md5( $image_info['url'] ),
+				'title'       => $title,
+				'description' => $description,
+				'author'      => $author,
+				'mime'        => $mime,
+				'timestamp'   => $timestamp,
+				'url'         => $image_info['url'],
+				'thumbnail'   => isset( $image_info['thumburl'] ) ? $image_info['thumburl'] : $image_info['url'],
+				'page_url'    => isset( $page_item['fullurl'] ) ? $page_item['fullurl'] : '',
+			);
+		}
+
+		if ( $sort === 'newest' || $sort === 'oldest' ) {
+			usort( $results, static function ( $a, $b ) use ( $sort ) {
+				$time_a = isset( $a['timestamp'] ) ? strtotime( (string) $a['timestamp'] ) : 0;
+				$time_b = isset( $b['timestamp'] ) ? strtotime( (string) $b['timestamp'] ) : 0;
+
+				if ( $time_a === $time_b ) {
+					return 0;
+				}
+
+				if ( $sort === 'newest' ) {
+					return $time_b <=> $time_a;
+				}
+
+				return $time_a <=> $time_b;
+			} );
+		}
+
+		if ( count( $results ) > $per_page ) {
+			$results = array_slice( $results, 0, $per_page );
+		}
+
+		return new \WP_REST_Response( array( 'results' => $results ), 200 );
 	}
 }
 

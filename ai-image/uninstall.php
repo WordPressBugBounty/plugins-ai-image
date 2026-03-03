@@ -24,7 +24,7 @@ function bdthemes_ai_image_uninstall() {
 	delete_option( 'bdthemes_giphy_api_key' );
 
 	// Provider Settings
-	$provider_ids = array( 'global', 'pexels', 'pixabay', 'unsplash', 'openverse', 'giphy', 'openai', 'gemini' );
+	$provider_ids = array( 'global', 'pexels', 'pixabay', 'unsplash', 'openverse', 'wikimedia', 'giphy', 'openai', 'gemini' );
 	foreach ( $provider_ids as $id ) {
 		delete_option( 'bdthemes_ai_image_provider_' . $id );
 	}
