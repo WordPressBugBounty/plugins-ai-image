@@ -1,4 +1,4 @@
-.ai-image-biggopti {
+[id^="bdt-admin-biggopti-api-biggopti"] {
     padding: 0 !important;
     border: 0 !important;
     box-shadow: none !important;
@@ -8,7 +8,7 @@
     background-color: #fff
 }
 
-.ai-image-biggopti .bdt-admin-biggopti-api-biggopti-dismiss {
+[id^="bdt-admin-biggopti-api-biggopti"] .bdt-admin-api-biggopti-dismiss {
     position: absolute;
     top: 2px;
     right: 8px;
@@ -17,7 +17,7 @@
     border: none
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global {
     border-left: 4px solid #4e6af5 !important;
     display: flex;
     align-items: flex-start;
@@ -27,31 +27,31 @@
     z-index: 99
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-license-biggopti-logo img {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-license-biggopti-logo img {
     width: 45px;
     height: auto;
     vertical-align: middle
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-license-biggopti-content h3 {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-license-biggopti-content h3 {
     margin: 0 0 10px;
     font-size: 20px
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-license-biggopti-content p {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-license-biggopti-content p {
     margin: 0;
     color: #5f6169;
     max-width: 750px
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-license-biggopti-button-wrap {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-license-biggopti-button-wrap {
     margin-top: 14px;
     display: flex;
     align-items: center;
     gap: 10px
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-button {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-button {
     padding: 12px 16px;
     border-radius: 3px;
     line-height: 1;
@@ -60,56 +60,43 @@
     text-decoration: none
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-button-allow {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-button-allow {
     color: #fff
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global .ai-image-button-skip {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global .ai-image-button-skip {
     border: 0;
     color: #08c2ff
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global.ai_image .ai-image-button-allow {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global.ai_image .ai-image-button-allow {
     --primaryColor: #4e6af5;
     --secondaryColor: #08c2ff;
     background: linear-gradient(313deg, var(--primaryColor), var(--secondaryColor) 100%)
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global.ai_image .ai-image-button-allow:hover {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global.ai_image .ai-image-button-allow:hover {
     --primaryColor: #08c2ff;
     --secondaryColor: #4e6af5
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global.ai_image .ai-image-button-skip {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global.ai_image .ai-image-button-skip {
     background-color: rgba(86, 220, 88, 0.15)
 }
 
-.ai-image-biggopti .ai-image-license-biggopti-global.ai_image .ai-image-button-skip:hover {
+[id^="bdt-admin-biggopti-api-biggopti"] .ai-image-license-biggopti-global.ai_image .ai-image-button-skip:hover {
     background-color: rgba(86, 220, 88, 0.2)
 }
 
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-ai-image-biggopti-logo-wrapper {
-    width: clamp(36px, 4vw, 46px);
-    height: clamp(36px, 4vw, 46px);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.14);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-ai-image-biggopti-logo-wrapper img {
+[id^="bdt-admin-biggopti-api-biggopti"] .bdt-plugin-logo-wrapper img {
     vertical-align: middle;
-    width: clamp(20px, 2.3vw, 28px);
+    width: clamp(25px, 3vw, 40px);
     height: auto;
-    filter: brightness(0) invert(1);
     animation: logoSlideIn .6s ease-out .3s both;
     transition: transform .3s ease
 }
 
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-ai-image-biggopti-logo-wrapper:hover img {
+[id^="bdt-admin-biggopti-api-biggopti"] .bdt-plugin-logo-wrapper:hover img {
     transform: scale(1.1) rotate(5deg)
 }
 
@@ -217,7 +204,7 @@
     margin-top: 10px;
 }
 
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-admin-biggopti-api-biggopti-dismiss:before {
+[id^="bdt-admin-biggopti-api-biggopti"] .bdt-admin-api-biggopti-dismiss:before {
     color: #ffffff91
 }
 
@@ -355,47 +342,12 @@
     border-color: var(--nm-accent)
 }
 
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star {
-    opacity: 1;
-    z-index: 2;
-    filter: drop-shadow(0 0 10px var(--nm-shadow-color))
-}
-
 [id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn svg {
     width: 16px;
     height: 16px;
     display: block
 }
 
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star-1 {
-    top: 21%;
-    left: -18%
-}
-
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star-2 {
-    top: -25%;
-    left: 10%
-}
-
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star-3 {
-    top: 69%;
-    left: 25%
-}
-
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star-4 {
-    top: -34%;
-    left: 80%
-}
-
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star-5 {
-    top: 25%;
-    left: 115%
-}
-
-[id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-btn .nm-biggopti-btn:hover .zolo-star-6 {
-    top: 5%;
-    left: 60%
-}
 
 @keyframes buttonSlideIn {
     0% {
@@ -424,4 +376,14 @@
     [id^="bdt-admin-biggopti-api-biggopti"] .bdt-biggopti-countdown .countdown-timer {
         padding: 0 30px
     }
+}
+
+ /* extra css for logo */
+
+[id^="bdt-admin-biggopti-api-biggopti"] .bdt-plugin-logo-wrapper img.bdt-logo-visible-only-ai-image {
+    background: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    box-sizing: border-box;
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.15))
 }

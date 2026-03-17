@@ -1,3 +1,21 @@
+## 2.1.1 [17th March 2026] 
+
+### Added
+
+- Dashboard feed widget with styled RSS posts, banner image, badges, and footer links on the WordPress dashboard
+
+### Fixed
+
+- Overflow issue hiding download dropdown button next to import button on image cards
+- Z-index layering so dropdown menus appear above all card elements including preview icon
+- Hover stability for import button and action buttons - more reliable interaction
+
+### Improved
+
+- Better flex layout for author name and action buttons to prevent overflow
+- Author name now properly truncates with ellipsis when space is limited
+
+
 ## 2.1.0 [3rd March 2026] 
 
 ### Added

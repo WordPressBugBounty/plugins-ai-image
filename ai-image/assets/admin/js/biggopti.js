@@ -3,7 +3,8 @@ jQuery(document).ready(function ($) {
     /* ===================================
        Start Admin API BIGGOPTI
        =================================== */
-    $(document).on('click', '.ai-image-biggopti.is-dismissible .bdt-admin-biggopti-api-biggopti-dismiss', function (e) {
+    // Dismiss API BIGGOPTI
+    $(document).on('click', '.ai-image-biggopti.is-dismissible .bdt-admin-api-biggopti-dismiss', function (e) {
         e.preventDefault();
         var $this = $(this).closest('.ai-image-biggopti');
         var displayId = $this.data('display-id') || $this.attr('data-display-id') || '';
@@ -15,14 +16,14 @@ jQuery(document).ready(function ($) {
         }
         var $time = $this.data('dismissible-time') || $this.attr('data-dismissible-time') || $this.attr('dismissible-time') || 604800;
         var $meta = $this.data('dismissible-meta') || $this.attr('data-dismissible-meta') || $this.attr('dismissible-meta') || 'transient';
-        var cfg = window.AIImageBiggoptiConfig || window.AIImageAdminApiBiggoptiConfig || {};
+        var cfg = window.AiImageAdminApiBiggoptiConfig || window.AIImageBiggoptiConfig || window.AIImageAdminApiBiggoptiConfig || {};
         var ajaxUrl = cfg.ajaxurl || (typeof ajaxurl !== 'undefined' ? ajaxurl : '');
         if (!ajaxUrl || !displayId || !cfg.nonce) return;
         $.ajax({
             url: ajaxUrl,
             type: 'POST',
             data: {
-                action: 'bdt_admin_api_biggopti_dismiss',
+                action: 'ai_image_admin_api_biggopti_dismiss',
                 display_id: displayId,
                 id: $this.attr('id'),
                 meta: $meta,
@@ -36,66 +37,91 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    /**
+     * Initialize countdown timers for API biggopties
+     * This function finds all countdown elements and starts the countdown timer
+     */
     function initAPIBiggoptiCountdown() {
+        // Find all countdown elements on the page
         jQuery('.bdt-biggopti-countdown').each(function () {
             var $countdown = jQuery(this);
             var $timer = $countdown.find('.countdown-timer');
             var endDate = $countdown.data('end-date');
             var timezone = $countdown.data('timezone');
 
+            // Skip if no end date or timer element found
             if (!endDate || !$timer.length) {
                 return;
             }
 
+            /**
+             * Update the countdown display
+             * Calculates time remaining and formats it for display
+             */
             function updateCountdown() {
                 var endTime = new Date(endDate + ' ' + timezone).getTime();
                 var now = new Date().getTime();
                 var distance = endTime - now;
 
+                // If countdown has expired, hide the countdown
                 if (distance < 0) {
                     $countdown.hide();
                     return;
                 }
 
+                // Calculate time units
                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                days = days < 10 ? '0' + days : days;
-                hours = hours < 10 ? '0' + hours : hours;
-                minutes = minutes < 10 ? '0' + minutes : minutes;
-                seconds = seconds < 10 ? '0' + seconds : seconds;
+                // Add leading zeros
+                days = days < 10 ? "0" + days : days;
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                var countdownText = '';
+                // Build countdown text with wrapped numbers and labels
+                var countdownText = "";
                 if (days > 0) {
                     countdownText += '<div class="countdown-item"><span class="number">' + days + '</span><span class="label">days</span></div><span class="separator"></span>';
                 }
+                // Always show hours (even if 00) for consistent layout
                 countdownText += '<div class="countdown-item"><span class="number">' + hours + '</span><span class="label">hrs</span></div><span class="separator"></span>';
+
                 countdownText += '<div class="countdown-item"><span class="number">' + minutes + '</span><span class="label">min</span></div><span class="separator"></span>';
+
                 countdownText += '<div class="countdown-item"><span class="number">' + seconds + '</span><span class="label">sec</span></div>';
 
+                // Update the timer display
                 $timer.html(countdownText);
             }
 
+            // Initial update to show countdown immediately
             updateCountdown();
+
+            // Set up interval to update countdown every second
             setInterval(updateCountdown, 1000);
         });
     }
 
+    // Initialize countdown on page load
     initAPIBiggoptiCountdown();
 
+    // Re-initialize countdown when new biggopties are added (for dynamic content)
+    // This ensures countdown works even if biggopties are loaded after page load
     jQuery(document).on('DOMNodeInserted', '.bdt-biggopti-countdown', function () {
         initAPIBiggoptiCountdown();
     });
 
+    // Fetch API biggopties directly (no PHP ajax_fetch_api_biggopties)
     var BIGGOPTI_API_URL = 'https://api.sigmative.io/prod/store/api/biggopti/api-data-records';
-    var BIGGOPTI_CFG = window.AIImageBiggoptiConfig || window.AIImageAdminApiBiggoptiConfig || {};
+    var BIGGOPTI_CFG = window.AiImageAdminApiBiggoptiConfig || window.AIImageBiggoptiConfig || window.AIImageAdminApiBiggoptiConfig || {};
     var BIGGOPTI_ASSETS_URL = BIGGOPTI_CFG.assetsUrl || '';
 
     var skippedDueToProTargetedAndPro = false;
 
-    function isAiImagePromoItemValid(item) {
+    function isAIImagePromoItemValid(item) {
         if (!item || item.product !== 'ai-image' || item.type !== 'adminDashboard') return false;
         var targets = item.client_targets || [];
         var isPro = (BIGGOPTI_CFG && BIGGOPTI_CFG.isPro) || false;
@@ -137,7 +163,7 @@ jQuery(document).ready(function ($) {
 
         var inner = '<div class="' + wrapperClass + '"' + (bg ? ' style="' + esc(bg) + '"' : '') + '>' +
             '<div class="bdt-api-biggopti-content">' +
-            '<div class="bdt-ai-image-biggopti-logo-wrapper"><img height="auto" width="40" src="' + BIGGOPTI_ASSETS_URL + 'imgs/logo.png" alt="AI Image Logo"></div>' +
+            '<div class="bdt-plugin-logo-wrapper"><img height="auto" width="40" class="bdt-logo-visible-only-ai-image" src="' + BIGGOPTI_ASSETS_URL + 'imgs/logo.png" alt="AI Image Logo"></div>' +
             '<div class="bdt-biggopti-content">' +
             '<div class="bdt-biggopti-content-inner">' + logoHtml +
             '<div class="bdt-biggopti-title-description">' +
@@ -151,7 +177,7 @@ jQuery(document).ready(function ($) {
         var classes = 'ai-image-biggopti biggopti biggopti-info is-dismissible';
         var attrs = 'id="' + biggoptiId + '"';
         attrs += ' data-display-id="' + esc(displayId) + '" data-dismissible-meta="transient" data-dismissible-time="' + endTs + '"';
-        var dismissBtn = '<button type="button" class="bdt-admin-biggopti-api-biggopti-dismiss dashicons dashicons-dismiss"><span class="screen-reader-text">Dismiss this biggopti.</span></button>';
+        var dismissBtn = '<button type="button" class="bdt-admin-api-biggopti-dismiss dashicons dashicons-dismiss"><span class="screen-reader-text">Dismiss this biggopti.</span></button>';
         return '<div class="' + classes + '" ' + attrs + '>' + inner + dismissBtn + '</div>';
     }
 
@@ -171,7 +197,13 @@ jQuery(document).ready(function ($) {
 
         if (!imageUrl) return '';
 
-        return '\n            <div id="' + esc(feedId) + '" class="ai-image-feed">\n                <a href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">\n                    <img src="' + esc(imageUrl) + '" alt="" style="max-width:100%; height:auto;">\n                </a>\n            </div>\n        ';
+        return `
+            <div id="${esc(feedId)}" class="bdt-dashboard-feed">
+                <a href="${esc(link)}" target="_blank" rel="noopener noreferrer">
+                    <img src="${esc(imageUrl)}" alt="" style="max-width:100%; height:auto;">
+                </a>
+            </div>
+        `;
     }
 
     function isExcludedUrl() {
@@ -183,6 +215,10 @@ jQuery(document).ready(function ($) {
         return false;
     }
 
+    /**
+     * Detect current visibility sector(s) from the admin URL.
+     * Returns array of sector strings: wp_dashboard, plugin_dashboard, themes_page, settings_page, user_page, plugin_pages, tools_page.
+     */
     function getCurrentVisibilitySectors() {
         var phpSector = (BIGGOPTI_CFG && BIGGOPTI_CFG.currentSector) || '';
         if (phpSector) {
@@ -227,7 +263,7 @@ jQuery(document).ready(function ($) {
     function isItemVisibleForCurrentSector(item) {
         var sectors = item.visibility_sectors;
         if (!sectors || !Array.isArray(sectors) || sectors.length === 0) return true;
-        var current = getCurrentVisibilitySectors();
+        var current = getCurrentVisibilitySectors(); /* no fallback: out-of-selector pages = don't show */
         for (var i = 0; i < current.length; i++) {
             if (sectors.indexOf(current[i]) !== -1) return true;
         }
@@ -241,7 +277,7 @@ jQuery(document).ready(function ($) {
         for (var i = 0; i < current.length; i++) {
             if (PROMO_SECTORS.indexOf(current[i]) !== -1) return true;
         }
-        return current.length === 0;
+        return current.length === 0; /* unknown page = no restriction, show submenu everywhere */
     }
 
     function injectBiggoptiesFromData(data) {
@@ -252,7 +288,7 @@ jQuery(document).ready(function ($) {
         var validForDashboard = [];
         var seen = {};
         for (var i = 0; i < list.length; i++) {
-            if (!isAiImagePromoItemValid(list[i])) continue;
+            if (!isAIImagePromoItemValid(list[i])) continue;
             var did = list[i].display_id || list[i].id || 'default-' + i;
             if (seen[did]) continue;
             seen[did] = true;
@@ -285,6 +321,7 @@ jQuery(document).ready(function ($) {
             }
         }
 
+        // Dismiss button is in HTML; delegated handler handles click
         initAPIBiggoptiCountdown();
     }
 
@@ -292,6 +329,7 @@ jQuery(document).ready(function ($) {
         var list = data && data['ultimate-store-kit'];
         if (!Array.isArray(list) || !list.length) return;
 
+        // Target dashboard (or anywhere you want)
         var $dashboard = $('#bdt-dashboard-overview .inside');
         if (!$dashboard.length) $dashboard = $('#bdt-dashboard-overview');
         if (!$dashboard.length) return;
@@ -310,13 +348,16 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    /* ===================================
+       Submenu Promotion Menu (shares API data with biggopties)
+       =================================== */
     var FALLBACK = { sub_title: 'Go Pro', link: 'https://bdthemes.com/deals/?utm_source=WordPress_org&utm_medium=bfcm_cta&utm_campaign=ai_image' };
 
     function getFirstValidPromo(data) {
         var list = data && data['ai-image'];
         if (!Array.isArray(list)) return null;
         for (var i = 0; i < list.length; i++) {
-            if (isAiImagePromoItemValid(list[i]) && list[i].link) {
+            if (isAIImagePromoItemValid(list[i]) && list[i].link) {
                 var t = list[i].sub_title;
                 return { sub_title: t, link: list[i].link };
             }
@@ -326,14 +367,27 @@ jQuery(document).ready(function ($) {
 
     function injectPromotionMenu(promo) {
         var isPro = (BIGGOPTI_CFG && BIGGOPTI_CFG.isPro) || false;
-        if (isPro && !promo) return;
-        var adminSubmenu = document.querySelector('#menu-posts-ai_image .wp-submenu');
+        if (isPro && !promo) return; /* skip only FALLBACK when Pro */
+        var adminSubmenu = document.querySelector('#toplevel_page_ai-image-settings .wp-submenu');
         if (!adminSubmenu || adminSubmenu.querySelector('.bdt-promo-menu-item')) return;
         var p = promo || FALLBACK;
         var href = (p.link || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
         var text = (p.sub_title).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         var html = '<li class="bdt-promo-menu-item"><a href="' + href + '" target="_blank" style="color: #f24101; font-weight: 600;" rel="noopener noreferrer">' + text + '</a></li>';
         adminSubmenu.insertAdjacentHTML('beforeend', html);
+    }
+
+    function injectPromotionPluginRowMeta(promo) {
+        if (window.location.pathname.indexOf('plugins.php') === -1) return;
+        var p = promo || FALLBACK;
+        var href = (p.link || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        var text = (p.sub_title || 'Get Pro').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        var $row = $('tr#ai-image, tr[data-slug="ai-image"]').first();
+        if (!$row.length) return;
+        var $rowActions = $row.find('td.plugin-title .row-actions, .plugin-title .row-actions').first();
+        if (!$rowActions.length) return;
+        if ($rowActions.find('.bdt-promo-row-meta').length) return;
+        $rowActions.append('<span class="bdt-promo-row-meta"> | <a href="' + href + '" target="_blank" style="color:#f24101;font-weight:600;" rel="noopener noreferrer">' + text + '</a></span>');
     }
 
     function processApiData(data) {
@@ -350,20 +404,22 @@ jQuery(document).ready(function ($) {
         if (isCurrentSectorAllowedForPromo() && (promo || !skippedDueToProTargetedAndPro)) {
             injectPromotionMenu(promo);
         }
+        injectPromotionPluginRowMeta(promo || FALLBACK);
     }
 
-    function fetchAiImagePromoData() {
+    function fetchAIImagePromoData() {
         fetch(BIGGOPTI_API_URL).then(function (r) { return r.json(); }).then(processApiData).catch(function () {
             if (isCurrentSectorAllowedForPromo() && !(BIGGOPTI_CFG && BIGGOPTI_CFG.isPro)) {
                 injectPromotionMenu(FALLBACK);
             }
+            injectPromotionPluginRowMeta(FALLBACK);
         });
     }
 
     $(window).on('load', function () {
         setTimeout(function () {
-            fetchAiImagePromoData();
-            setTimeout(fetchAiImagePromoData, 500);
+            fetchAIImagePromoData();
+            setTimeout(fetchAIImagePromoData, 500);
         }, 400);
     });
 

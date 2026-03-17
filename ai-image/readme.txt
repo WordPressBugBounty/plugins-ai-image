@@ -1,7 +1,7 @@
 === Instant Image Generator (AI Image by Gemini, Dall-E and One Click Image from Unsplash, Openverse, Pixabay, Pexels, Giphy) ===
 Contributors: bdthemes, selimmw, abutalib, mohammaadfarid, muhammadasik, arafatakashakku
 Tags: ai image generator, stock photos, pixabay, pexels, unsplash
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 Requires PHP: 7.0
 Requires at least: 5.0
 Tested up to: 6.9
@@ -208,19 +208,20 @@ https://youtu.be/cGmPFU_ju4s
 
 == Screenshots ==
 
-1. Global Search — Search across all image providers at once
-2. Image Generator with Masonry Grid View
-3. Image Preview Modal with Sidebar
-4. Admin Dashboard — General Settings
-5. Admin Dashboard — Image Sources with Drag & Drop Ordering
-6. Admin Dashboard — Display Settings
-7. AI Image Generation with OpenAI DALL·E
-8. AI Image Generation with Google Gemini
-9. Pixabay Advanced Filters (Order, Type, Category, Color, Orientation)
-10. WordPress Media Modal Integration — Instant Images Tab
+1. Instant Image Generator Overview
+2. Admin Dashboard — General Settings
+3. Admin Dashboard — Display Settings
+4. Admin Dashboard — Image Sources with Drag & Drop Ordering
+5. Custom Image Sizes Management
+6. Global Search — Search across all image providers at once
+7. Image Generation with Pexels Layout
+8. Pixabay Advanced Filters (Order, Type, Category, Color, Orientation)
+9. AI Image Generation with Openverse
+10. AI Image Generation with Unsplash
 11. GIF Animation Control — Hover to Play
-12. Batch Selection and Import
-13. Custom Image Sizes Management
+12. AI Image Generation with OpenAI DALL·E
+13. AI Image Generation with Google Gemini
+14. Checkout our other Addons
 
 == Frequently Asked Questions ==
 
@@ -271,6 +272,15 @@ To improve page performance and reduce visual clutter, **Giphy GIFs are displaye
 **No.** The plugin only loads its assets (JavaScript and CSS) on admin pages where they're needed — the Dashboard settings page, the Image Generator page, and admin pages where the WordPress Media Modal is available. It adds **zero frontend code** to your public-facing website. Your visitors will never notice the plugin is installed. The React-based interface is optimized for performance with lazy loading, debounced search, and efficient image rendering.
 
 == Changelog ==
+
+= 2.1.1 [17th March 2026] =
+
+* Added: Dashboard feed widget with styled RSS posts, banner image, badges, and footer links on the WordPress dashboard
+* Fixed: Overflow issue hiding download dropdown button next to import button on image cards
+* Fixed: Z-index layering so dropdown menus appear above all card elements including preview icon
+* Fixed: Hover stability for import button and action buttons - more reliable interaction 
+* Improved: Better flex layout for author name and action buttons to prevent overflow
+* Improved: Author name now properly truncates with ellipsis when space is limited
 
 = 2.1.0 [3rd March 2026] =
 
