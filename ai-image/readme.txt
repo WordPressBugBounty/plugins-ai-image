@@ -1,7 +1,7 @@
 === Instant Image Generator (AI Image by Gemini, Dall-E and One Click Image from Unsplash, Openverse, Pixabay, Pexels, Giphy) ===
 Contributors: bdthemes, selimmw, abutalib, mohammaadfarid, muhammadasik, arafatakashakku
 Tags: ai image generator, stock photos, pixabay, pexels, unsplash
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Requires PHP: 7.0
 Requires at least: 5.0
 Tested up to: 6.9
@@ -272,6 +272,14 @@ To improve page performance and reduce visual clutter, **Giphy GIFs are displaye
 **No.** The plugin only loads its assets (JavaScript and CSS) on admin pages where they're needed — the Dashboard settings page, the Image Generator page, and admin pages where the WordPress Media Modal is available. It adds **zero frontend code** to your public-facing website. Your visitors will never notice the plugin is installed. The React-based interface is optimized for performance with lazy loading, debounced search, and efficient image rendering.
 
 == Changelog ==
+
+= 2.1.2 [7th April 2026] =
+
+* Fixed: Scoped Tailwind Preflight to `.ai-image-wrap` only — prevents base style resets from bleeding into wp-admin buttons, headings, and other global elements
+* Fixed: Link color inside the plugin UI now explicitly set to WordPress blue (`#2271b1`) after preflight inherits parent color
+* Fixed: `.search-input-field` scoped under `.ai-image-wrap` to avoid unintended global style matches
+* Improved: Tailwind global `preflight` disabled via `corePlugins` — scoped equivalent in `ai-image-preflight.css` replaces it for the plugin root only
+* Improved: All Tailwind utilities now use `.ai-image-wrap` as the `important` selector for consistent specificity
 
 = 2.1.1 [17th March 2026] =
 

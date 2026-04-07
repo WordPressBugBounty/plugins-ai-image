@@ -1,3 +1,17 @@
+## 2.1.2 [7th April 2026]
+
+### Fixed
+
+- Scoped Tailwind Preflight to `.ai-image-wrap` only — prevents base style resets from bleeding into wp-admin buttons, headings, and other global elements
+- Link color inside the plugin UI now explicitly set to WordPress blue (`#2271b1`) after preflight inherits parent color
+- `.search-input-field` scoped under `.ai-image-wrap` to avoid unintended global style matches
+
+### Improved
+
+- Tailwind global `preflight` disabled via `corePlugins` — scoped equivalent in `ai-image-preflight.css` replaces it for the plugin root only
+- All Tailwind utilities now use `.ai-image-wrap` as the `important` selector for consistent specificity
+
+
 ## 2.1.1 [17th March 2026] 
 
 ### Added
