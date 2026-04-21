@@ -1,7 +1,7 @@
-=== Instant Image Generator (AI Image by Gemini, Dall-E and One Click Image from Unsplash, Openverse, Pixabay, Pexels, Giphy) ===
+=== Instant AI Image Generator – Create & Import Images ===
 Contributors: bdthemes, selimmw, abutalib, mohammaadfarid, muhammadasik, arafatakashakku
 Tags: ai image generator, stock photos, pixabay, pexels, unsplash
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 Requires PHP: 7.0
 Requires at least: 5.0
 Tested up to: 6.9
@@ -13,24 +13,24 @@ Search millions of stock photos, generate AI images with OpenAI & Gemini, browse
 
 == Description ==
 
-**Instant Image Generator** is the most powerful and complete image management plugin for WordPress. Stop wasting time searching for images across multiple websites, downloading them to your computer, and re-uploading to WordPress. With Instant Image Generator, you can **search, preview, and import millions of free images** directly into your WordPress Media Library — all without ever leaving your dashboard.
+**Instant AI Image Generator** is the most powerful and complete image management plugin for WordPress. Stop wasting time searching for images across multiple websites, downloading them to your computer, and re-uploading to WordPress. With Instant AI Image Generator, you can **search, preview, and import millions of free images** directly into your WordPress Media Library — all without ever leaving your dashboard.
 
 🔍 **Search across 5+ image sources** including Pixabay, Pexels, Unsplash, Openverse, and Giphy — all from a single, unified search bar. Or use the **AI-powered image generation** with OpenAI DALL·E and Google Gemini Imagen to create completely unique images from text descriptions.
 
 ###USEFUL LINKS 👇###
 **[Documentation](https://bdthemes.com/knowledge-base/ai-image/ai-image-generator/?utm_source=WordPress_Repository&utm_medium=Plugin_Page&utm_campaign=WordPress_to_AI_Image_Generator)** | **[Need Support?](https://bdthemes.com/support/)**
 
-https://youtu.be/cGmPFU_ju4s
+https://youtu.be/5TgYpqAILwM?si=KNM8ju5gYWLrPRJw
 
-== 🚀 Why Instant Image Generator? ==
+== 🚀 Why Instant AI Image Generator? ==
 
 Finding the right image for your blog post, page, or product shouldn't be a chore. Traditional workflows require you to open a new tab, search a stock photo website, download the image, switch back to WordPress, upload it, and then insert it. That's **6 steps** for a single image.
 
-With Instant Image Generator, it's just **2 steps**: Search → Import. Done.
+With Instant AI Image Generator, it's just **2 steps**: Search → Import. Done.
 
 Whether you're a blogger crafting your next viral post, an agency building client websites, a WooCommerce store owner adding product images, or a content creator who needs fresh visuals daily — this plugin transforms your workflow and saves you hours every week.
 
-**Instant Image Generator** integrates seamlessly into both the **WordPress Media Library page** and the **WordPress Media Modal** (the popup that appears when you click "Add Media" or set a Featured Image). This means you can access millions of images from anywhere in WordPress — while editing a post, creating a page, or managing your media.
+**Instant AI Image Generator** integrates seamlessly into both the **WordPress Media Library page** and the **WordPress Media Modal** (the popup that appears when you click "Add Media" or set a Featured Image). This means you can access millions of images from anywhere in WordPress — while editing a post, creating a page, or managing your media.
 
 == ✨ Key Features ==
 
@@ -56,7 +56,7 @@ Create completely unique, one-of-a-kind images using artificial intelligence:
 Every image you find can be imported directly to your WordPress Media Library with a single click. No downloading, no uploading, no FTP — just click "Import" and the image appears in your Media Library instantly, ready to use in posts, pages, and products.
 
 = 🖼️ WordPress Media Modal Integration =
-Access Instant Image Generator directly from the **WordPress Media Modal** — the popup that appears when you set a Featured Image, add media to a post, or use any media selector. A dedicated "Instant Images" tab appears right alongside "Upload Files" and "Media Library" for seamless workflow integration.
+Access Instant AI Image Generator directly from the **WordPress Media Modal** — the popup that appears when you set a Featured Image, add media to a post, or use any media selector. A dedicated "Instant Images" tab appears right alongside "Upload Files" and "Media Library" for seamless workflow integration.
 
 = 🏷️ Smart Image Metadata =
 When importing images, the plugin automatically sets:
@@ -164,7 +164,7 @@ Explore the best free addons for Elementor and Gutenberg to boost your site with
 
 * **[Dark Reader](https://wordpress.org/plugins/dark-reader/)** - Instantly transform your website into a sleek, eye-friendly dark mode experience with smooth and elegant styling.
 
-* **[Instant Image Generator](https://wordpress.org/plugins/ai-image/)** - Generate AI-powered images or import visuals instantly from popular platforms like Unsplash, Openverse, Pixabay, Pexels and Giphy — all from one place.
+* **[Instant AI Image Generator](https://wordpress.org/plugins/ai-image/)** - Generate AI-powered images or import visuals instantly from popular platforms like Unsplash, Openverse, Pixabay, Pexels and Giphy — all from one place.
 
 * **[Live Copy Paste](https://wordpress.org/plugins/live-copy-paste/)** - Seamlessly copy and paste sections, widgets and entire pages across domains with zero hassle.
 
@@ -182,11 +182,11 @@ Visit [BdThemes](https://bdthemes.com/) to learn about our services, Elementor p
 
 == Installation ==
 
-Installing Instant Image Generator is quick and easy:
+Installing Instant AI Image Generator is quick and easy:
 
 = From WordPress Dashboard =
 1. Navigate to **Plugins → Add New**
-2. Search for **"Instant Image Generator"**
+2. Search for **"Instant AI Image Generator"**
 3. Click **Install Now** and then **Activate**
 4. Go to **AI Image → Dashboard** to configure your settings
 5. Navigate to **Media → Image Generator** to start finding images!
@@ -204,11 +204,11 @@ Installing Instant Image Generator is quick and easy:
 * **Gemini** — Get your free API Key from [Google AI Studio](https://aistudio.google.com/apikey)
 * **Pexels, Pixabay, Openverse** — No API key required! Works out of the box.
 
-https://youtu.be/cGmPFU_ju4s
+https://youtu.be/5TgYpqAILwM?si=KNM8ju5gYWLrPRJw
 
 == Screenshots ==
 
-1. Instant Image Generator Overview
+1. Instant AI Image Generator Overview
 2. Admin Dashboard — General Settings
 3. Admin Dashboard — Display Settings
 4. Admin Dashboard — Image Sources with Drag & Drop Ordering
@@ -272,6 +272,13 @@ To improve page performance and reduce visual clutter, **Giphy GIFs are displaye
 **No.** The plugin only loads its assets (JavaScript and CSS) on admin pages where they're needed — the Dashboard settings page, the Image Generator page, and admin pages where the WordPress Media Modal is available. It adds **zero frontend code** to your public-facing website. Your visitors will never notice the plugin is installed. The React-based interface is optimized for performance with lazy loading, debounced search, and efficient image rendering.
 
 == Changelog ==
+
+= 2.1.3 [19th April 2026] =
+
+* Updated: Plugin display name to **Instant AI Image Generator – Create & Import Images** in readme and plugin headers (WordPress.org naming guidelines)
+* Updated: Readme: clearer tone, **External services** disclosure, fewer promotional claims
+* Fixed: Block `apiVersion` set to **3** for WordPress 7+ block editor requirements
+* Fixed: Translation calls in `admin/feed.php` use the `ai-image` text domain as a string literal
 
 = 2.1.2 [7th April 2026] =
 
