@@ -394,6 +394,13 @@ MEDIAJS;
 			wp_send_json_error( array( 'message' => 'Invalid nonce.' ) );
 		}
 
+		if ( ! current_user_can( 'upload_files' ) ) {
+			wp_send_json_error(
+				array( 'message' => __( 'You do not have permission to upload files.', 'ai-image' ) ),
+				403
+			);
+		}
+
 		// Check if image URL is provided
 		if ( ! isset( $_POST['image_url'] ) || empty( $_POST['image_url'] ) ) {
 			wp_send_json_error( array( 'message' => 'No image URL provided.' ) );
@@ -436,11 +443,19 @@ MEDIAJS;
 			}
 			
 		} else {
-			// Handle regular URL
+			// Handle regular URL (reject unsafe / local targets to reduce SSRF risk).
 			$image_url = esc_url_raw( $raw_image_url );
-			
-			// Fetch the image from the URL
-			$response = wp_remote_get( $image_url, array( 'timeout' => 60 ) );
+			if ( empty( $image_url ) || ! wp_http_validate_url( $image_url ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid or disallowed image URL.', 'ai-image' ) ) );
+			}
+
+			$response = wp_safe_remote_get(
+				$image_url,
+				array(
+					'timeout' => 60,
+					'redirection' => 3,
+				)
+			);
 
 			// Check if the request failed
 			if ( is_wp_error( $response ) ) {

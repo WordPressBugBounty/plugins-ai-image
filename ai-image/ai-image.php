@@ -4,7 +4,7 @@
  * Plugin Name: Instant AI Image Generator – Create & Import Images
  * Plugin URI: https://wordpress.org/plugins/ai-image/
  * Description: Instant AI Image Generator (Gemini, DALL·E) + One-Click Images from Unsplash, Pixabay, Pexels, Giphy & Openverse. Upload directly to WordPress.
- * Version: 2.1.4
+ * Version: 2.1.5
  * Author: BdThemes
  * Author URI: https://bdthemes.com
  * License: GPLv3
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-define( 'BDT_AI_IMAGE_VERSION', '2.1.4' );
+define( 'BDT_AI_IMAGE_VERSION', '2.1.5' );
 define( 'BDT_AI_IMAGE__FILE__', __FILE__ );
 define( 'BDT_AI_IMAGE_PATH', plugin_dir_path( BDT_AI_IMAGE__FILE__ ) );
 define( 'BDT_AI_IMAGE_URL', plugins_url( '/', BDT_AI_IMAGE__FILE__ ) );
