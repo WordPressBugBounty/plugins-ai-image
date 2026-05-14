@@ -100,6 +100,7 @@ class Biggopti {
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'ai_image' ),			
 			'isPro'             	=> false,
+			'isProInstalled'     	=> false,
 			'assetsUrl'         	=> BDT_AI_IMAGE_ASSETS,
 			'dismissedDisplayIds'	=> $dismissed_display_ids,
 			'currentSector'      	=> $current_sector,

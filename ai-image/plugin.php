@@ -42,23 +42,90 @@ final class Plugin {
 	}
 
 	/**
+	 * Admin screens that render this plugin’s own UI (always load assets).
+	 *
+	 * @return string[]
+	 */
+	private function ai_image_plugin_admin_hooks() {
+		return array( 'settings_page_ai-image-settings', 'media_page_bdt-ai-media-tab' );
+	}
+
+	/**
+	 * Whether wp.media (Image Generator tab) is expected on this admin screen.
+	 * Uses WP_Screen so we do not load on unrelated pages (e.g. plugins, users).
+	 *
+	 * @param string $hook_suffix Passed from admin_enqueue_scripts (usually WP_Screen::$id).
+	 * @return bool
+	 */
+	private function is_ai_image_media_modal_context_screen( $hook_suffix ) {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( $screen instanceof \WP_Screen ) {
+			// Post / page / any CPT editor.
+			if ( 'post' === $screen->base ) {
+				return true;
+			}
+			// Media library, add media, upload flows.
+			if ( in_array( $screen->base, array( 'upload', 'media' ), true ) ) {
+				return true;
+			}
+			// List tables (featured image, bulk actions, etc.).
+			if ( 'edit' === $screen->base ) {
+				return true;
+			}
+			$modal_screen_ids = array(
+				'site-editor',
+				'widgets',
+				'nav-menus',
+				'theme-editor',
+				'customize',
+				'media-upload',
+			);
+			if ( in_array( $screen->id, $modal_screen_ids, true ) ) {
+				return true;
+			}
+		}
+		// CPT list: hook id is often `edit-{post_type}` when screen object is unavailable.
+		if ( preg_match( '/^edit-[a-z0-9_-]+$/', $hook_suffix ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Whether to load the main admin bundle (CSS/JS) on this screen.
+	 *
+	 * @param string $hook_suffix Passed from admin_enqueue_scripts.
+	 * @return bool
+	 */
+	private function should_enqueue_ai_image_admin_bundle( $hook_suffix ) {
+		if ( in_array( $hook_suffix, $this->ai_image_plugin_admin_hooks(), true ) ) {
+			return true;
+		}
+		if ( get_option( 'bdthemes_ai_image_hide_media_modal_tab', '0' ) === '1' ) {
+			return false;
+		}
+		$load = $this->is_ai_image_media_modal_context_screen( $hook_suffix );
+		/**
+		 * Override whether the Image Generator admin bundle loads (media modal tab enabled).
+		 *
+		 * @param bool   $load          Default decision.
+		 * @param string $hook_suffix   Current admin screen hook suffix / screen id.
+		 */
+		return (bool) apply_filters( 'bdthemes_ai_image_should_enqueue_admin_bundle', $load, $hook_suffix );
+	}
+
+	/**
 	 * Admin Styles
 	 *
 	 * @since 1.0.0
 	 */
 	public function enqueue_admin_styles( $hook_suffix ) {
-		$is_plugin_page = ( 'settings_page_ai-image-settings' === $hook_suffix || 'media_page_bdt-ai-media-tab' === $hook_suffix );
-		$media_modal_enabled = get_option( 'bdthemes_ai_image_hide_media_modal_tab', '0' ) !== '1';
-
-		if ( ! $is_plugin_page && ! $media_modal_enabled ) {
+		if ( ! $this->should_enqueue_ai_image_admin_bundle( $hook_suffix ) ) {
 			return;
 		}
 
-		// On plugin pages always load; on other pages only if media modal is enabled
-		if ( $is_plugin_page || $media_modal_enabled ) {
-			wp_register_style( 'ai-image', BDT_AI_IMAGE_URL . 'build/admin/index.css', array(), BDT_AI_IMAGE_VERSION );
-			wp_enqueue_style( 'ai-image' );
-		}
+		wp_register_style( 'ai-image', BDT_AI_IMAGE_URL . 'build/admin/index.css', array(), BDT_AI_IMAGE_VERSION );
+		wp_enqueue_style( 'ai-image' );
 	}
 
 	/**
@@ -68,12 +135,11 @@ final class Plugin {
 	 * @return void
 	 */
 	public function enqueue_admin_scripts( $hook_suffix ) {
-		$is_plugin_page = ( 'settings_page_ai-image-settings' === $hook_suffix || 'media_page_bdt-ai-media-tab' === $hook_suffix );
-		$media_modal_enabled = get_option( 'bdthemes_ai_image_hide_media_modal_tab', '0' ) !== '1';
-
-		if ( ! $is_plugin_page && ! $media_modal_enabled ) {
+		if ( ! $this->should_enqueue_ai_image_admin_bundle( $hook_suffix ) ) {
 			return;
 		}
+
+		$is_plugin_page = in_array( $hook_suffix, $this->ai_image_plugin_admin_hooks(), true );
 
 		$asset_file = plugin_dir_path( __FILE__ ) . 'build/admin/index.asset.php';
 
@@ -142,8 +208,8 @@ final class Plugin {
 			$script_config
 		);
 
-		// Add media modal integration script on non-plugin pages
-		if ( ! $is_plugin_page && $media_modal_enabled ) {
+		// Add media modal integration script only on screens where the tab is used (not on plugin settings pages).
+		if ( ! $is_plugin_page && get_option( 'bdthemes_ai_image_hide_media_modal_tab', '0' ) !== '1' ) {
 			wp_enqueue_media();
 			$this->enqueue_media_modal_script();
 		}

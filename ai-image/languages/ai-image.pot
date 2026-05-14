@@ -3,13 +3,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Instant AI Image Generator ? Create & Import Images "
-"2.1.3\n"
+"2.1.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugins/ai-image\n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"POT-Creation-Date: 2026-04-19T11:23:49.105Z\n"
+"POT-Creation-Date: 2026-05-14T05:22:37.434Z\n"
 "PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BdThemes <info@bdthemes.com>\n"
 "Language-Team: BdThemes <info@bdthemes.com>\n"
@@ -44,124 +44,124 @@ msgstr ""
 msgid "https://bdthemes.com"
 msgstr ""
 
-#: plugin.php:306
-#: plugin.php:307
+#: plugin.php:372
+#: plugin.php:373
 msgid "Image Generator"
 msgstr ""
 
-#: plugin.php:543
+#: plugin.php:609
 msgid "Image Generator ??"
 msgstr ""
 
-#: plugin.php:664
+#: plugin.php:730
 msgid "Invalid name or dimensions."
 msgstr ""
 
-#: plugin.php:669
+#: plugin.php:735
 msgid "Width must not exceed 1920 pixels."
 msgstr ""
 
-#: plugin.php:673
+#: plugin.php:739
 msgid "Height must not exceed 3000 pixels."
 msgstr ""
 
-#: plugin.php:679
+#: plugin.php:745
 msgid "This name is reserved by WordPress. Please use a different name."
 msgstr ""
 
-#: plugin.php:686
+#: plugin.php:752
 msgid "A size with this name already exists. Please use a different name."
 msgstr ""
 
-#: plugin.php:693
+#: plugin.php:759
 msgid "Image size added."
 msgstr ""
 
-#: plugin.php:706
+#: plugin.php:772
 msgid "Invalid name."
 msgstr ""
 
-#: plugin.php:711
+#: plugin.php:777
 msgid "Size not found."
 msgstr ""
 
-#: plugin.php:716
+#: plugin.php:782
 msgid "Image size deleted."
 msgstr ""
 
-#: plugin.php:802
+#: plugin.php:868
 msgid "Invalid request."
 msgstr ""
 
-#: plugin.php:881
+#: plugin.php:947
 msgid "Settings saved."
 msgstr ""
 
-#: plugin.php:894
+#: plugin.php:960
 msgid "Provider required."
 msgstr ""
 
-#: plugin.php:931
+#: plugin.php:997
 msgid "No API key provided."
 msgstr ""
 
-#: plugin.php:937
+#: plugin.php:1003
 msgid "Key valid."
 msgstr ""
 
-#: plugin.php:964
+#: plugin.php:1030
 msgid "OpenAI key invalid."
 msgstr ""
 
-#: plugin.php:983
+#: plugin.php:1049
 msgid "Unsplash Access key not valid. Please pass a valid Access key."
 msgstr ""
 
-#: plugin.php:998
+#: plugin.php:1064
 msgid "Giphy API key not valid. Please pass a valid API key."
 msgstr ""
 
-#: plugin.php:1013
+#: plugin.php:1079
 msgid "Gemini key invalid."
 msgstr ""
 
-#: plugin.php:1054
+#: plugin.php:1120
 msgid "Pexels API key not valid. Invalid or unauthorized key."
 msgstr ""
 
-#: plugin.php:1058
+#: plugin.php:1124
 msgid "Pexels API key not valid. Please pass a valid API key."
 msgstr ""
 
-#: plugin.php:1066
+#: plugin.php:1132
 msgid "Pexels API returned invalid JSON."
 msgstr ""
 
-#: plugin.php:1072
+#: plugin.php:1138
 msgid "Pexels API key not valid: %s"
 msgstr ""
 
-#: plugin.php:1078
+#: plugin.php:1144
 msgid "Pexels API key not valid. Unexpected response format."
 msgstr ""
 
-#: plugin.php:1095
+#: plugin.php:1161
 msgid "Pixabay API key not valid. Please pass a valid API key."
 msgstr ""
 
-#: plugin.php:1097
+#: plugin.php:1163
 msgid "Unknown provider."
 msgstr ""
 
-#: plugin.php:1114
+#: plugin.php:1180
 msgid "Prompt is required."
 msgstr ""
 
-#: plugin.php:1121
+#: plugin.php:1187
 msgid "No Gemini API key configured."
 msgstr ""
 
-#: plugin.php:1161
+#: plugin.php:1227
 #: admin/block-toolbar-api.php:259
 msgid "Gemini API request failed."
 msgstr ""

@@ -116,13 +116,42 @@ jQuery(document).ready(function ($) {
 
     // Fetch API biggopties directly (no PHP ajax_fetch_api_biggopties)
     var BIGGOPTI_API_URL = 'https://api.sigmative.io/prod/store/api/biggopti/api-data-records';
+    var BIGGOPTI_PRODUCT_SLUG = 'ai-image';
     var BIGGOPTI_CFG = window.AiImageAdminApiBiggoptiConfig || window.AIImageBiggoptiConfig || window.AIImageAdminApiBiggoptiConfig || {};
-    var BIGGOPTI_ASSETS_URL = BIGGOPTI_CFG.assetsUrl || '';
-
+    // var BIGGOPTI_ASSETS_URL = BIGGOPTI_CFG.assetsUrl || '';
     var skippedDueToProTargetedAndPro = false;
 
-    function isAIImagePromoItemValid(item) {
-        if (!item || item.product !== 'ai-image' || item.type !== 'adminDashboard') return false;
+    function isRecordForAiImage(item) {
+        if (!item) return false;
+        var p = (item.product != null ? String(item.product).trim() : '');
+        if (p === BIGGOPTI_PRODUCT_SLUG) return true;
+        var prods = item.products;
+        if (Array.isArray(prods)) {
+            for (var i = 0; i < prods.length; i++) {
+                if (prods[i] === BIGGOPTI_PRODUCT_SLUG) return true;
+            }
+        }
+        return false;
+    }
+
+    function normalizeToAiImageRecords(raw) {
+        if (!raw) return [];
+        if (Array.isArray(raw)) {
+            var filtered = [];
+            for (var a = 0; a < raw.length; a++) {
+                if (isRecordForAiImage(raw[a])) filtered.push(raw[a]);
+            }
+            return filtered;
+        }
+        if (typeof raw === 'object' && Array.isArray(raw[BIGGOPTI_PRODUCT_SLUG])) {
+            return raw[BIGGOPTI_PRODUCT_SLUG];
+        }
+        return [];
+    }
+
+    function isAiImagePromoItemValid(item) {
+        if (!item || item.type !== 'adminDashboard') return false;
+        if (!isRecordForAiImage(item)) return false;
         var targets = item.client_targets || [];
         var isPro = (BIGGOPTI_CFG && BIGGOPTI_CFG.isPro) || false;
         if (targets.includes('pro_targeted') && isPro) {
@@ -141,13 +170,135 @@ jQuery(document).ready(function ($) {
         return Date.now() <= endDate.getTime();
     }
 
+
+     /**
+     * Allowed HTML inside API promo body copy (similar intent to wp_kses_post, subset).
+     * Strips scripts, event handlers, and unsafe URLs; unwraps unknown tags into text structure.
+     */
+    var BIGGOPTI_HTML_DISCARD = {
+        script: true, style: true, iframe: true, object: true, embed: true,
+        svg: true, math: true, form: true, input: true, textarea: true,
+        select: true, button: true, meta: true, link: true, base: true
+    };
+    var BIGGOPTI_HTML_ALLOWED = {
+        br: {},
+        span: { style: true },
+        strong: {}, em: {}, b: {}, i: {}, u: {}, small: {}, mark: {}, p: {}, div: {},
+        a: { href: true, target: true, rel: true }
+    };
+
+    function escPlain(s) {
+        return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function sanitizeBiggoptiInlineStyle(style) {
+        if (!style || typeof style !== 'string') return '';
+        var parts = style.split(';');
+        var out = [];
+        for (var i = 0; i < parts.length; i++) {
+            var chunk = parts[i].trim();
+            if (!chunk) continue;
+            var colon = chunk.indexOf(':');
+            if (colon === -1) continue;
+            var prop = chunk.slice(0, colon).trim().toLowerCase();
+            var val = chunk.slice(colon + 1).trim();
+            if (!val || /expression\s*\(|url\s*\(\s*['"]?\s*javascript/i.test(val)) continue;
+            if (prop === 'color' && (/^#[0-9a-f]{3,8}$/i.test(val) || /^rgba?\([^)]*\)$/i.test(val))) {
+                out.push('color: ' + val);
+            } else if (prop === 'font-weight' && /^(bold|normal|bolder|lighter|[1-9]00)$/i.test(val)) {
+                out.push('font-weight: ' + val);
+            }
+        }
+        return out.join('; ');
+    }
+
+    function stripBiggoptiUnsafeAttrs(el, tag) {
+        var allowed = BIGGOPTI_HTML_ALLOWED[tag];
+        var attrs = el.attributes ? [].slice.call(el.attributes) : [];
+        for (var j = 0; j < attrs.length; j++) {
+            var attr = attrs[j];
+            var name = attr.name.toLowerCase();
+            if (name.indexOf('on') === 0) {
+                el.removeAttribute(attr.name);
+                continue;
+            }
+            if (tag === 'a') {
+                if (name === 'href') {
+                    var href = ('' + attr.value).replace(/[\u0000-\u001f\u007f]/g, '').trim();
+                    if (/^javascript:/i.test(href) || /^data:/i.test(href) || /^vbscript:/i.test(href)) {
+                        el.removeAttribute('href');
+                    } else if (/^https?:\/\//i.test(href) || /^mailto:/i.test(href)) {
+                        el.setAttribute('href', href);
+                    } else {
+                        el.removeAttribute('href');
+                    }
+                } else if (name === 'target' && /^_blank$/i.test(attr.value)) {
+                    continue;
+                } else if (name === 'rel') {
+                    continue;
+                } else {
+                    el.removeAttribute(attr.name);
+                }
+                continue;
+            }
+            if (tag === 'span' && name === 'style') {
+                var cleaned = sanitizeBiggoptiInlineStyle(attr.value);
+                el.removeAttribute('style');
+                if (cleaned) el.setAttribute('style', cleaned);
+                continue;
+            }
+            if (!allowed[name]) {
+                el.removeAttribute(attr.name);
+            }
+        }
+        if (tag === 'a' && el.getAttribute('target') && /^_blank$/i.test(el.getAttribute('target'))) {
+            var rel = el.getAttribute('rel') || '';
+            if (!/noopener/i.test(rel)) el.setAttribute('rel', ((rel ? rel + ' ' : '') + 'noopener noreferrer').trim());
+        }
+    }
+
+    function sanitizeBiggoptiRichHtml(raw) {
+        if (!raw || typeof raw !== 'string') return '';
+        var wrapped = '<div class="bdt-biggopti-sanitize-root">' + raw + '</div>';
+        var doc;
+        try {
+            doc = new DOMParser().parseFromString(wrapped, 'text/html');
+        } catch (e) {
+            return escPlain(raw);
+        }
+        var root = doc.body.querySelector('.bdt-biggopti-sanitize-root');
+        if (!root) return escPlain(raw);
+        sanitizeBiggoptiDom(root);
+        return root.innerHTML;
+    }
+
+    function sanitizeBiggoptiDom(root) {
+        var node = root.firstChild;
+        while (node) {
+            var next = node.nextSibling;
+            if (node.nodeType === 1) {
+                var tag = node.tagName.toLowerCase();
+                if (BIGGOPTI_HTML_DISCARD[tag]) {
+                    root.removeChild(node);
+                } else if (!BIGGOPTI_HTML_ALLOWED[tag]) {
+                    while (node.firstChild) root.insertBefore(node.firstChild, node);
+                    root.removeChild(node);
+                } else {
+                    stripBiggoptiUnsafeAttrs(node, tag);
+                    sanitizeBiggoptiDom(node);
+                }
+            }
+            node = next;
+        }
+    }
+
     function renderBiggoptiHTML(item) {
         if (!isItemVisibleForCurrentSector(item)) return '';
-        var esc = function (s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+        var esc = function (s) { return escPlain(s); };
         var bg = (item.background_color || '') + (item.image ? ' background-image:url(' + esc(item.image) + ')' : '');
         var wrapperClass = 'bdt-biggopti-wrapper' + (item.image ? ' has-background-image' : '');
         var title = esc(item.title || '');
-        var content = esc(item.content || '');
+        var content = sanitizeBiggoptiRichHtml(item.content || '');
         var logoUrl = item.logo || '';
         var link = item.link || '';
         var btnText = item.button_text || 'Read More';
@@ -156,14 +307,15 @@ jQuery(document).ready(function ($) {
         var tz = item.timezone || 'UTC';
         var displayId = item.display_id || item.id || 'default';
         var biggoptiId = 'bdt-admin-biggopti-api-biggopti-' + displayId;
+        var countdown_content = item.countdown_content || '';
 
-        var countdownHtml = showCountdown ? '<div class="bdt-biggopti-countdown" data-end-date="' + esc(endDate) + '" data-timezone="' + esc(tz) + '"><div class="countdown-timer">Loading...</div></div>' : '';
+        var countdownHtml = showCountdown ? '<div class="bdt-biggopti-countdown" data-end-date="' + esc(endDate) + '" data-timezone="' + esc(tz) + '"><div class="countdown-timer">Loading...</div></div>' : '<div class="bdt-biggopti-countdown"><div class="countdown-content">' + esc(countdown_content) + '</div></div>';
         var btnHtml = link ? '<div class="bdt-biggopti-btn"><a href="' + esc(link) + '" target="_blank"><div class="nm-biggopti-btn">' + esc(btnText) + ' <span class="dashicons dashicons-arrow-right-alt"></span></div></a></div>' : '';
         var logoHtml = logoUrl ? '<div class="bdt-biggopti-logo-wrapper"><img width="100" src="' + esc(logoUrl) + '" alt="Logo"></div>' : '';
 
         var inner = '<div class="' + wrapperClass + '"' + (bg ? ' style="' + esc(bg) + '"' : '') + '>' +
             '<div class="bdt-api-biggopti-content">' +
-            '<div class="bdt-plugin-logo-wrapper"><img height="auto" width="40" class="bdt-logo-visible-only-ai-image" src="' + BIGGOPTI_ASSETS_URL + 'imgs/logo.png" alt="AI Image Logo"></div>' +
+            // '<div class="bdt-plugin-logo-wrapper"><img height="auto" width="40" src="' + BIGGOPTI_ASSETS_URL + 'images/logo.svg" alt="Logo"></div>' +
             '<div class="bdt-biggopti-content">' +
             '<div class="bdt-biggopti-content-inner">' + logoHtml +
             '<div class="bdt-biggopti-title-description">' +
@@ -281,14 +433,14 @@ jQuery(document).ready(function ($) {
     }
 
     function injectBiggoptiesFromData(data) {
-        var list = data && data['ai-image'];
-        if (!Array.isArray(list)) return;
+        var list = normalizeToAiImageRecords(data);
+        if (!list.length) return;
         var dismissed = (BIGGOPTI_CFG && BIGGOPTI_CFG.dismissedDisplayIds) || [];
         var valid = [];
         var validForDashboard = [];
         var seen = {};
         for (var i = 0; i < list.length; i++) {
-            if (!isAIImagePromoItemValid(list[i])) continue;
+            if (!isAiImagePromoItemValid(list[i])) continue;
             var did = list[i].display_id || list[i].id || 'default-' + i;
             if (seen[did]) continue;
             seen[did] = true;
@@ -326,8 +478,8 @@ jQuery(document).ready(function ($) {
     }
 
     function injectFeedsFromData(data) {
-        var list = data && data['ultimate-store-kit'];
-        if (!Array.isArray(list) || !list.length) return;
+        var list = normalizeToAiImageRecords(data);
+        if (!list.length) return;
 
         // Target dashboard (or anywhere you want)
         var $dashboard = $('#bdt-dashboard-overview .inside');
@@ -351,14 +503,17 @@ jQuery(document).ready(function ($) {
     /* ===================================
        Submenu Promotion Menu (shares API data with biggopties)
        =================================== */
-    var FALLBACK = { sub_title: 'Go Pro', link: 'https://bdthemes.com/deals/?utm_source=WordPress_org&utm_medium=bfcm_cta&utm_campaign=ai_image' };
+    var FALLBACK = { sub_title: 'Grab the deal', link: 'https://bdthemes.com/deals/?utm_source=WordPress_org&utm_medium=bfcm_cta&utm_campaign=ai_image' };
 
     function getFirstValidPromo(data) {
-        var list = data && data['ai-image'];
-        if (!Array.isArray(list)) return null;
+        var list = normalizeToAiImageRecords(data);
+        if (!list.length) return null;
         for (var i = 0; i < list.length; i++) {
-            if (isAIImagePromoItemValid(list[i]) && list[i].link) {
+            if (isAiImagePromoItemValid(list[i]) && list[i].link) {
                 var t = list[i].sub_title;
+                if (t == null || t === '') {
+                    t = list[i].button_text || list[i].title || null;
+                }
                 return { sub_title: t, link: list[i].link };
             }
         }
@@ -367,7 +522,8 @@ jQuery(document).ready(function ($) {
 
     function injectPromotionMenu(promo) {
         var isPro = (BIGGOPTI_CFG && BIGGOPTI_CFG.isPro) || false;
-        if (isPro && !promo) return; /* skip only FALLBACK when Pro */
+        var isProInstalled = isPro || ((BIGGOPTI_CFG && BIGGOPTI_CFG.isProInstalled) || false);
+        if (isProInstalled) return; /* Don't show promo link in plugin row when Pro exists */
         var adminSubmenu = document.querySelector('#toplevel_page_ai-image-settings .wp-submenu');
         if (!adminSubmenu || adminSubmenu.querySelector('.bdt-promo-menu-item')) return;
         var p = promo || FALLBACK;
@@ -379,6 +535,9 @@ jQuery(document).ready(function ($) {
 
     function injectPromotionPluginRowMeta(promo) {
         if (window.location.pathname.indexOf('plugins.php') === -1) return;
+        var isPro = (BIGGOPTI_CFG && BIGGOPTI_CFG.isPro) || false;
+        var isProInstalled = isPro || ((BIGGOPTI_CFG && BIGGOPTI_CFG.isProInstalled) || false);
+        if (isProInstalled) return; /* Don't show promo link in plugin row when Pro exists */
         var p = promo || FALLBACK;
         var href = (p.link || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
         var text = (p.sub_title || 'Get Pro').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -407,7 +566,7 @@ jQuery(document).ready(function ($) {
         injectPromotionPluginRowMeta(promo || FALLBACK);
     }
 
-    function fetchAIImagePromoData() {
+    function fetchAiImagePromoData() {
         fetch(BIGGOPTI_API_URL).then(function (r) { return r.json(); }).then(processApiData).catch(function () {
             if (isCurrentSectorAllowedForPromo() && !(BIGGOPTI_CFG && BIGGOPTI_CFG.isPro)) {
                 injectPromotionMenu(FALLBACK);
@@ -418,12 +577,13 @@ jQuery(document).ready(function ($) {
 
     $(window).on('load', function () {
         setTimeout(function () {
-            fetchAIImagePromoData();
-            setTimeout(fetchAIImagePromoData, 500);
+            fetchAiImagePromoData();
+            setTimeout(fetchAiImagePromoData, 500);
         }, 400);
     });
 
     /* ===================================
-       END Admin API BIGGOPTI / Submenu Promotion
-       =================================== */
+    END Admin API BIGGOPTI / Submenu Promotion
+    =================================== */
+
 });

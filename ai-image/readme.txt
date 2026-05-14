@@ -1,7 +1,7 @@
 === Instant AI Image Generator – Create & Import Images ===
 Contributors: bdthemes, selimmw, abutalib, mohammaadfarid, muhammadasik, arafatakashakku
 Tags: ai image generator, stock photos, pixabay, pexels, unsplash
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 Requires PHP: 7.0
 Requires at least: 5.0
 Tested up to: 6.9
@@ -20,7 +20,7 @@ Search millions of stock photos, generate AI images with OpenAI & Gemini, browse
 ###USEFUL LINKS 👇###
 **[Documentation](https://bdthemes.com/knowledge-base/ai-image/ai-image-generator/?utm_source=WordPress_Repository&utm_medium=Plugin_Page&utm_campaign=WordPress_to_AI_Image_Generator)** | **[Need Support?](https://bdthemes.com/support/)**
 
-https://youtu.be/5TgYpqAILwM?si=KNM8ju5gYWLrPRJw
+https://youtu.be/cGmPFU_ju4s
 
 == 🚀 Why Instant AI Image Generator? ==
 
@@ -204,7 +204,7 @@ Installing Instant AI Image Generator is quick and easy:
 * **Gemini** — Get your free API Key from [Google AI Studio](https://aistudio.google.com/apikey)
 * **Pexels, Pixabay, Openverse** — No API key required! Works out of the box.
 
-https://youtu.be/5TgYpqAILwM?si=KNM8ju5gYWLrPRJw
+https://youtu.be/cGmPFU_ju4s
 
 == Screenshots ==
 
@@ -272,6 +272,11 @@ To improve page performance and reduce visual clutter, **Giphy GIFs are displaye
 **No.** The plugin only loads its assets (JavaScript and CSS) on admin pages where they're needed — the Dashboard settings page, the Image Generator page, and admin pages where the WordPress Media Modal is available. It adds **zero frontend code** to your public-facing website. Your visitors will never notice the plugin is installed. The React-based interface is optimized for performance with lazy loading, debounced search, and efficient image rendering.
 
 == Changelog ==
+
+= 2.1.4 [14th May 2026] =
+
+* Fixed: Admin notice styling and handling
+
 
 = 2.1.3 [19th April 2026] =
 

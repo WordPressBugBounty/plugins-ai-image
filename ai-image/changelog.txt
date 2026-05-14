@@ -1,3 +1,10 @@
+## 2.1.4 [14th May 2026]
+
+### Fixed
+
+- Admin notice styling and handling
+
+
 ## 2.1.3 [19th April 2026]
 
 ### Updated
@@ -9,6 +16,7 @@
 
 - Block `apiVersion` set to **3** for WordPress 7+ block editor requirements
 - Translation calls in `admin/feed.php` use the `ai-image` text domain as a string literal
+
 
 ## 2.1.2 [7th April 2026]
 
